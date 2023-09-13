@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> initialzationCamera() async {
     var cameras = await availableCameras();
     controller = CameraController(
-        cameras[EnumCameraDescription.back.index], ResolutionPreset.medium,
+        cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
         imageFormatGroup: ImageFormatGroup.yuv420);
     await controller.initialize();
   }
