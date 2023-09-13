@@ -76,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     content: SizedBox(
                       width: 200.0,
                       height: 200.0,
-                      child: CircleAvatar(
-                        backgroundImage: Image.file(File(xfile.path)).image,
+                      child: Image(
+                        image: Image.file(File(xfile.path)).image,
                       ),
                     ),
                   ));
