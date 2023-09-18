@@ -69,26 +69,25 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
+          var crop_image = new SizedBox(
+            width: 300,
+            height: 300,
+            child: AspectRatio(
+              aspectRatio: 487 / 300,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      alignment: FractionalOffset.center,
+                      image: (Image.file(File(xfile.path)).image)),
+                ),
+              ),
+            ),
+          );
           showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                    title: Text('test'),
-                    content: SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: AspectRatio(
-                        aspectRatio: 487 / 300,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.fitWidth,
-                                alignment: FractionalOffset.center,
-                                image: (Image.file(File(xfile.path)).image)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ));
+              builder: (context) =>
+                  AlertDialog(title: Text('test'), content: crop_image));
         }
       }
     });
