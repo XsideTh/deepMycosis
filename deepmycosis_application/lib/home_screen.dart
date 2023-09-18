@@ -74,6 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context) => AlertDialog(
                     title: Text('test'),
                     content: SizedBox(
+                      width: 300,
+                      height: 300,
                       child: AspectRatio(
                         aspectRatio: 487 / 300,
                         child: Container(
