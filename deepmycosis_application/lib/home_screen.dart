@@ -79,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
+                                fit: BoxFit.fitWidth,
+                                alignment: FractionalOffset.center,
                                 image: (Image.file(File(xfile.path)).image)),
                           ),
                         ),
