@@ -70,14 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
           var crop_image = new SizedBox(
-            width: 300,
-            height: 300,
             child: AspectRatio(
               aspectRatio: 487 / 300,
-              child: Container(
+              child: Container(height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
+                    
                       fit: BoxFit.fitWidth,
+                      // fitWidth ให้รูปเป็นแนวนอน
                       alignment: FractionalOffset.center,
                       image: (Image.file(File(xfile.path)).image)),
                 ),
