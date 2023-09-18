@@ -76,8 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     content: SizedBox(
                       child: AspectRatio(
                         aspectRatio: 487 / 300,
-                        child: Image(
-                          image: (Image.file(File(xfile.path)).image),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: (Image.file(File(xfile.path)).image)),
+                          ),
                         ),
                       ),
                     ),
