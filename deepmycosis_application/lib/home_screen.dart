@@ -74,8 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context) => AlertDialog(
                     title: Text('test'),
                     content: SizedBox(
-                      child: Image(
-                        image: Image.file(File(xfile.path)).image,
+                      child: AspectRatio(
+                        aspectRatio: 487 / 451,
+                        child: Image(
+                          image: (Image.file(File(xfile.path)).image),
+                        ),
                       ),
                     ),
                   ));
