@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
           //saveFile(Image.file(File(xfile.path)).image);
-          await imageClassification(File(xfile.path));
+          await pickImage(ImageSource.gallery);
           var answer;
           _results?.map((result) {
             answer = Text(
