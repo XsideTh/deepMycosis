@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await getApplicationDocumentsDirectory(); // 1
     String appDocumentsPath = appDocumentsDirectory.path; // 2
     String filePath = '$appDocumentsPath/sample.png'; // 3
-
+    print(filePath);
     return filePath;
   }
 
@@ -156,7 +156,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
           //saveFile(Image.file(File(xfile.path)).image);
-          await pickImage(ImageSource.gallery);
+          // using your method of getting an image
+          final File image = File(xfile.path);
+
+// getting a directory path for saving
+          final String path = await getFilePath();
+
+// copy the file to a new path
+          final File newImage = await image.copy('/sdcard/Pictures/sample.jpg');
+          await imageClassification(File(xfile.path));
           var answer;
           _results?.map((result) {
             answer = Text(
