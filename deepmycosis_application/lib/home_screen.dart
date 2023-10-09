@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -130,6 +132,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return filePath;
   }
 
+  Future<String> _resizePhoto(String filePath) async {
+    ImageProperties properties =
+        await FlutterNativeImage.getImageProperties(filePath);
+
+    int width = properties.width!;
+    var offset = (properties.height! - properties.width!) / 2;
+
+    File croppedFile = await FlutterNativeImage.cropImage(
+        filePath, 0, offset.round(), width, width);
+
+    return croppedFile.path;
+  }
+
+/*
+  Future<CroppedFile?> _cropImage(String imagePath) async {
+    var croppedFile = await ImageCropper.cropImage(
+      sourcePath: imagePath,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressFormat: ImageCompressFormat.jpg,
+    );
+    return croppedFile;
+  }*/
+
   void saveFile(var contents) async {
     File file = File(await getFilePath()); // 1
     file.writeAsBytes(contents); // 2
@@ -140,31 +165,15 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
-          var crop_image = new SizedBox(
-            child: AspectRatio(
-              aspectRatio: 487 / 300,
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      // fitWidth ให้รูปเป็นแนวนอน
-                      alignment: FractionalOffset.center,
-                      image: (Image.file(File(xfile.path)).image)),
-                ),
-              ),
-            ),
-          );
+          var crop_image = _resizePhoto(xfile.path);
+
           //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
-          final File image = File(xfile.path);
+          final File image = File(crop_image as String);
 
-// getting a directory path for saving
-          final String path = await getFilePath();
-
-// copy the file to a new path
-          final File newImage = await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(xfile.path));
+          // copy the file to a new path
+          await image.copy('/sdcard/Pictures/sample.jpg');
+          await imageClassification(File(crop_image as String));
           var answer;
           _results?.map((result) {
             answer = Text(
