@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Directory appDocumentsDirectory =
         await getApplicationDocumentsDirectory(); // 1
     String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/sample.jpg'; // 3
+    String filePath = '$appDocumentsPath/sample.png'; // 3
     print(filePath);
     return filePath;
   }
