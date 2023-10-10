@@ -123,11 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
     await controller.initialize();
   }
 
-  Future<String> getFilePath() async {
+  Future getFilePath() async {
     Directory appDocumentsDirectory =
         await getApplicationDocumentsDirectory(); // 1
     String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/sample.png'; // 3
+    String filePath = '$appDocumentsPath/sample.jpg'; // 3
     print(filePath);
     return filePath;
   }
@@ -139,10 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
     int width = properties.width!;
     var offset = (properties.height! - properties.width!) / 2;
 
-    File croppedFile = await FlutterNativeImage.cropImage(
-        filePath, 0, offset.round(), width, width);
+    File croppedFile =
+        await FlutterNativeImage.cropImage(filePath, 0, 0, 50, 50);
 
-    return croppedFile.path;
+    return Future.value(croppedFile.path);
   }
 
 /*
@@ -165,15 +165,15 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
-          var crop_image = _resizePhoto(xfile.path);
+          String crop_image = await _resizePhoto(xfile.path);
 
           //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
-          final File image = File(crop_image as String);
+          final File image = File(crop_image);
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(crop_image as String));
+          await imageClassification(File(crop_image));
           var answer;
           _results?.map((result) {
             answer = Text(
