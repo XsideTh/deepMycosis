@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<String> _resizePhoto(String filePath) async {
     File croppedFile =
-        await FlutterNativeImage.cropImage(filePath, 200, 70, 250, 350);
+        await FlutterNativeImage.cropImage(filePath, 170, 70, 265, 350);
 
     return Future.value(croppedFile.path);
   }
