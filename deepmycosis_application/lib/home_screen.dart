@@ -167,7 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(crop_image));
+          //await imageClassification(File(crop_image));
+          await pickImage(ImageSource.gallery);
           var answer;
           _results?.map((result) {
             answer = Text(
