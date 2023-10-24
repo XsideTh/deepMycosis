@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:pytorch_lite/pytorch_lite.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,9 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late CameraController controller;
 
   late File _image;
-  List? _results;
+  String? _results;
   bool imageSelect = false;
   bool isLoading = false;
+  late ClassificationModel classificationModel;
 
   @override
   void initState() {
@@ -31,29 +33,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future loadModel() async {
-    String res;
-    res = (await Tflite.loadModel(
-        model: "assets/model/dm_0.0001_16.tflite",
-        labels: "assets/model/labels.txt"))!;
-    print("Models loading status: $res");
+    try {
+      classificationModel = await PytorchLite.loadClassificationModel(
+          "assets/model/dmnet.pt", 224, 224, 1000,
+          labelPath: "assets/model/labels.txt");
+    } catch (e) {
+      if (e is PlatformException) {
+        print("only supported for android, Error is $e");
+      } else {
+        print("Error is $e");
+      }
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    Tflite.close();
+    //Tflite.close();
   }
 
   Future imageClassification(File image) async {
-    final List? recognitions = await Tflite.runModelOnImage(
+    String imagePrediction = await classificationModel
+        .getImagePrediction(await File(image.path).readAsBytes());
+    /*final List? recognitions = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 2,
       threshold: 0.1,
       imageStd: 1,
-    );
-    print("Models evaluated : ${recognitions.toString()}");
+    );*/
+    print("Models evaluated : $imagePrediction");
     setState(() {
-      _results = recognitions!;
+      _results = imagePrediction!;
       _image = image;
       imageSelect = true;
       isLoading = false;
@@ -169,12 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await image.copy('/sdcard/Pictures/sample.jpg');
           //await imageClassification(File(crop_image));
           await pickImage(ImageSource.gallery);
-          var answer;
-          _results?.map((result) {
-            answer = Text(
-              "${result['label']}",
-            );
-          });
+          var answer = _results;
           if (answer != null) {
             showDialog(
                 context: context,
@@ -184,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
             showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                    title: Text('test'), content: Text("Not Pythium")));
+                    title: Text('test'), content: Text(answer.toString())));
           }
         }
       }
