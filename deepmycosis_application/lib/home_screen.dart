@@ -6,7 +6,7 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image_cropper/image_cropper.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -133,14 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<String> _resizePhoto(String filePath) async {
-    ImageProperties properties =
-        await FlutterNativeImage.getImageProperties(filePath);
-
-    int width = properties.width!;
-    var offset = (properties.height! - properties.width!) / 2;
-
     File croppedFile =
-        await FlutterNativeImage.cropImage(filePath, 0, 0, 50, 50);
+        await FlutterNativeImage.cropImage(filePath, 170, 70, 265, 350);
 
     return Future.value(croppedFile.path);
   }
@@ -173,7 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(crop_image));
+          //await imageClassification(File(crop_image));
+          await pickImage(ImageSource.gallery);
           var answer;
           _results?.map((result) {
             answer = Text(
