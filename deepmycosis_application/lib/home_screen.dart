@@ -22,8 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late File _image;
   String? _results;
+  List<double>? _prob;
   bool imageSelect = false;
   bool isLoading = false;
+
   late ClassificationModel classificationModel;
 
   @override
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future loadModel() async {
     try {
       classificationModel = await PytorchLite.loadClassificationModel(
-          "assets/model/dmnet.pt", 224, 224, 1000,
+          "assets/model/model.pt", 224, 224, 2,
           labelPath: "assets/model/labels.txt");
     } catch (e) {
       if (e is PlatformException) {
@@ -55,6 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Future imageClassification(File image) async {
     String imagePrediction = await classificationModel
         .getImagePrediction(await File(image.path).readAsBytes());
+    print("prediction is : $imagePrediction");
+    List<double>? predictionListProbabilities =
+        await classificationModel!.getImagePredictionListProbabilities(
+      await File(image.path).readAsBytes(),
+    );
+    print("with prob is : $predictionListProbabilities");
     /*final List? recognitions = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 2,
@@ -63,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );*/
     print("Models evaluated : $imagePrediction");
     setState(() {
-      _results = imagePrediction!;
+      _results = imagePrediction;
+      _prob = predictionListProbabilities;
       _image = image;
       imageSelect = true;
       isLoading = false;
@@ -122,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
       imageSelect = false;
     });
     File image = File(pickedFile!.path);
-    imageClassification(image);
+    await imageClassification(image);
   }
 
   Future<void> initialzationCamera() async {
@@ -180,11 +189,12 @@ class _HomeScreenState extends State<HomeScreen> {
           //await imageClassification(File(crop_image));
           await pickImage(ImageSource.gallery);
           var answer = _results;
-          if (answer != null) {
+          var prob = _prob;
+          if (_results != null) {
             showDialog(
                 context: context,
                 builder: (context) =>
-                    AlertDialog(title: Text('test'), content: Text(answer)));
+                    AlertDialog(title: Text('test'), content: Text(_results!)));
           } else {
             showDialog(
                 context: context,
