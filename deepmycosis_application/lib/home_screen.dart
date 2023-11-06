@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 
@@ -138,7 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
     var cameras = await availableCameras();
     controller = CameraController(
         cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
-        imageFormatGroup: ImageFormatGroup.yuv420);
+        imageFormatGroup: ImageFormatGroup.yuv420,)
+        ;
+    controller.setFlashMode(FlashMode.off);
     await controller.initialize();
   }
 
@@ -186,8 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
-          //await imageClassification(File(crop_image));
-          await pickImage(ImageSource.gallery);
+          await imageClassification(File(crop_image));
+          //await pickImage(ImageSource.gallery);
           var answer = _results;
           var prob = _prob;
           if (_results != null) {

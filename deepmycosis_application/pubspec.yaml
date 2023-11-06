@@ -32,7 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
   go_router: ^5.1.1
-  tflite: ^1.1.2
   image_picker: ^0.8.4+11
   path_provider: ^2.1.1
   flutter_native_image: ^0.0.6
