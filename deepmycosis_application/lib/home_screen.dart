@@ -4,8 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late File _image;
   String? _results;
-  List<double>? _prob;
+  double? _prob;
   bool imageSelect = false;
   bool isLoading = false;
 
@@ -55,24 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future imageClassification(File image) async {
-    String imagePrediction = await classificationModel
+    List<String> imagePrediction = await classificationModel
         .getImagePrediction(await File(image.path).readAsBytes());
-    print("prediction is : $imagePrediction");
-    List<double>? predictionListProbabilities =
-        await classificationModel!.getImagePredictionListProbabilities(
-      await File(image.path).readAsBytes(),
-    );
-    print("with prob is : $predictionListProbabilities");
-    /*final List? recognitions = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 2,
-      threshold: 0.1,
-      imageStd: 1,
-    );*/
-    print("Models evaluated : $imagePrediction");
+    print("prediction is : ${imagePrediction[0]}");
+    print("with prob is : ${imagePrediction[1]}");
     setState(() {
-      _results = imagePrediction;
-      _prob = predictionListProbabilities;
+      _results = imagePrediction[0];
+      _prob = double.parse(imagePrediction[1]);
       _image = image;
       imageSelect = true;
       isLoading = false;
@@ -82,43 +71,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: FutureBuilder(
-          future: initialzationCamera(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  AspectRatio(
-                      aspectRatio: 2 / 3, child: CameraPreview(controller)),
-                  AspectRatio(
-                      aspectRatio: 2 / 3,
-                      child: Image.asset(
-                        'assets/images/camera-overlay-conceptcoder.png',
-                        fit: BoxFit.cover,
-                      )),
-                  InkWell(
-                    onTap: () => onTakePicture(),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
-    );
+        appBar: AppBar(
+          title: Text('Deep Mycosis'),
+        ),
+        body: ButtonBar(
+          children: <Widget>[
+            ElevatedButton(
+                onPressed: () => context.go("/camera"), child: Text("Camera")),
+            ElevatedButton(
+                onPressed: () => pickImage(ImageSource.gallery),
+                child: Text("Gallery"))
+          ],
+          alignment: MainAxisAlignment.center,
+          buttonHeight: 50,
+          buttonMinWidth: 200,
+          buttonPadding: EdgeInsets.all(40),
+          overflowButtonSpacing: 10,
+          overflowDirection: VerticalDirection.down,
+          mainAxisSize: MainAxisSize.max,
+        ));
   }
 
   Future pickImage(ImageSource source) async {
@@ -132,79 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     File image = File(pickedFile!.path);
     await imageClassification(image);
-  }
-
-  Future<void> initialzationCamera() async {
-    var cameras = await availableCameras();
-    controller = CameraController(
-        cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
-        imageFormatGroup: ImageFormatGroup.yuv420);
-    await controller.initialize();
-  }
-
-  Future getFilePath() async {
-    Directory appDocumentsDirectory =
-        await getApplicationDocumentsDirectory(); // 1
-    String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/sample.png'; // 3
-    print(filePath);
-    return filePath;
-  }
-
-  Future<String> _resizePhoto(String filePath) async {
-    File croppedFile =
-        await FlutterNativeImage.cropImage(filePath, 224, 154, 175, 175);
-
-    return Future.value(croppedFile.path);
-  }
-
-/*
-  Future<CroppedFile?> _cropImage(String imagePath) async {
-    var croppedFile = await ImageCropper.cropImage(
-      sourcePath: imagePath,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressFormat: ImageCompressFormat.jpg,
-    );
-    return croppedFile;
-  }*/
-
-  void saveFile(var contents) async {
-    File file = File(await getFilePath()); // 1
-    file.writeAsBytes(contents); // 2
-  }
-
-  onTakePicture() async {
-    await controller.takePicture().then((XFile xfile) async {
-      if (mounted) {
-        // ignore: unnecessary_null_comparison
-        if (xfile != null) {
-          String crop_image = await _resizePhoto(xfile.path);
-
-          //saveFile(Image.file(File(xfile.path)).image);
-          // using your method of getting an image
-          final File image = File(crop_image);
-
-          // copy the file to a new path
-          await image.copy('/sdcard/Pictures/sample.jpg');
-          //await imageClassification(File(crop_image));
-          await pickImage(ImageSource.gallery);
-          var answer = _results;
-          var prob = _prob;
-          if (_results != null) {
-            showDialog(
-                context: context,
-                builder: (context) =>
-                    AlertDialog(title: Text('test'), content: Text(_results!)));
-          } else {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                    title: Text('test'), content: Text(answer.toString())));
-          }
-        }
-      }
-    });
+    if (_results != null) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: Text('Result'),
+              content: Text(_results! + " with prob " + _prob.toString())));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: Text('Result'), content: Text("error result is null")));
+    }
   }
 }
-
-enum EnumCameraDescription { front, back }
