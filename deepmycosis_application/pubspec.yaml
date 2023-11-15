@@ -28,18 +28,18 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  camera: ^0.10.0+4
-  flutter:
+  camera: ^0.10.0+4 #ใช้ในการเปิดกล้องมือถือ
+  flutter: #flutter
     sdk: flutter
-  go_router: ^5.1.1
-  image_picker: ^0.8.4+11
-  path_provider: ^2.1.1
-  flutter_native_image: ^0.0.6
-  pytorch_lite: ^4.2.2
+  go_router: ^5.1.1 #ใช้ในการเปลี่ยนหน้าต่างๆ
+  image_picker: ^0.8.4+11 #เลือกรูปภาพจากที่ต่างๆ เช่น เลือกรูปจาก gallery
+  path_provider: ^2.1.1 #ใช้ในการบอกว่า path ของโปรแกรมอยู่ส่วนใดจึงจะสามารถ save ได้
+  flutter_native_image: ^0.0.6 #ใช้ในการ crop รูปภาพให้เหลือเฉพาะเชื้อ
+  pytorch_lite: ^4.2.2 #ใช้ในการ run model แต่ต้องเป็น model ที่เป็น torch script
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.2 #Icon
 
 dev_dependencies:
   flutter_test:
