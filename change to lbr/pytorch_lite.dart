@@ -152,19 +152,19 @@ class ClassificationModel {
   /// for each class.
   ///
   /// Returns the index of the maximum value in the prediction list.
-  int softMax(List<double?> prediction) {
+  List softMax(List<double?> prediction) {
     double maxScore = double.negativeInfinity;
-    int maxScoreIndex = 0; //default value is pythium
+    int maxScoreIndex = 0;
 
     for (int i = 0; i < prediction.length; i++) {
-      print("predict prob : " + prediction[i].toString());
-      if (prediction[i]! < 0.318 ) {//0.318 = cutoff value
+      //print("score : " + prediction[i].toString());
+      if (prediction[i]! < 0.318) {
         maxScore = prediction[i]!;
         maxScoreIndex = 1;
       }
     }
-
-    return maxScoreIndex;
+    List result = [maxScoreIndex, prediction[0]];
+    return result;
   }
 
   /// Returns the probabilities of each element in the prediction list using the softmax function.
@@ -204,7 +204,7 @@ class ClassificationModel {
   /// The [mean] and [std] parameters are optional and default to the values of [torchVisionNormMeanRGB] and [torchVisionNormSTDRGB].
   /// The [preProcessingMethod] parameter is optional and defaults to [PreProcessingMethod.imageLib].
   /// Returns a [Future] that completes with a [String] representing the predicted image label.
-  Future<String> getImagePrediction(Uint8List imageAsBytes,
+  Future<List<String>> getImagePrediction(Uint8List imageAsBytes,
       {List<double> mean = torchVisionNormMeanRGB,
       List<double> std = torchVisionNormSTDRGB,
       PreProcessingMethod preProcessingMethod =
@@ -216,8 +216,9 @@ class ClassificationModel {
     final List<double> prediction = await getImagePredictionList(imageAsBytes,
         mean: mean, std: std, preProcessingMethod: preProcessingMethod);
 
-    int maxScoreIndex = softMax(prediction);
-    return labels[maxScoreIndex];
+    List result_temp = softMax(prediction);
+    List<String> result = [labels[result_temp[0]], result_temp[1].toString()];
+    return result;
   }
 
   /// Returns the predicted image as a list of scores using the given [imageAsBytes].
@@ -301,7 +302,7 @@ class ClassificationModel {
         mean: mean, std: std);
 
     // Find the index of the prediction with the maximum score
-    int maxScoreIndex = softMax(prediction);
+    int maxScoreIndex = softMax(prediction)[0];
 
     // Return the label corresponding to the maximum score
     return labels[maxScoreIndex];
@@ -380,7 +381,7 @@ class ClassificationModel {
         preProcessingMethod: preProcessingMethod);
 
     // Get the index of the maximum score from the prediction list
-    int maxScoreIndex = softMax(prediction);
+    int maxScoreIndex = softMax(prediction)[0];
     // Return the label corresponding to the maximum score index
     return labels[maxScoreIndex];
   }
