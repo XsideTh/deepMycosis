@@ -55,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future imageClassification(File image) async {
-    List<String> imagePrediction = await classificationModel
-        .getImagePrediction(await File(image.path).readAsBytes());
+    List<String> imagePrediction = (await classificationModel
+        .getImagePrediction(await File(image.path).readAsBytes()));
     print("prediction is : ${imagePrediction[0]}");
     print("with prob is : ${imagePrediction[1]}");
     setState(() {
@@ -103,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     File image = File(pickedFile!.path);
     await imageClassification(image);
-<<<<<<< HEAD
     if (_results != null) {
       showDialog(
           context: context,
@@ -116,81 +115,5 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context) => AlertDialog(
               title: Text('Result'), content: Text("error result is null")));
     }
-=======
-  }
-
-  Future<void> initialzationCamera() async {
-    var cameras = await availableCameras();
-    controller = CameraController(
-        cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
-        imageFormatGroup: ImageFormatGroup.yuv420,)
-        ;
-    controller.setFlashMode(FlashMode.off);
-    await controller.initialize();
-  }
-
-  Future getFilePath() async {
-    Directory appDocumentsDirectory =
-        await getApplicationDocumentsDirectory(); // 1
-    String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/sample.png'; // 3
-    print(filePath);
-    return filePath;
-  }
-
-  Future<String> _resizePhoto(String filePath) async {
-    File croppedFile =
-        await FlutterNativeImage.cropImage(filePath, 224, 154, 175, 175);
-
-    return Future.value(croppedFile.path);
-  }
-
-/*
-  Future<CroppedFile?> _cropImage(String imagePath) async {
-    var croppedFile = await ImageCropper.cropImage(
-      sourcePath: imagePath,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressFormat: ImageCompressFormat.jpg,
-    );
-    return croppedFile;
-  }*/
-
-  void saveFile(var contents) async {
-    File file = File(await getFilePath()); // 1
-    file.writeAsBytes(contents); // 2
-  }
-
-  onTakePicture() async {
-    await controller.takePicture().then((XFile xfile) async {
-      if (mounted) {
-        // ignore: unnecessary_null_comparison
-        if (xfile != null) {
-          String crop_image = await _resizePhoto(xfile.path);
-
-          //saveFile(Image.file(File(xfile.path)).image);
-          // using your method of getting an image
-          final File image = File(crop_image);
-
-          // copy the file to a new path
-          await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(crop_image));
-          //await pickImage(ImageSource.gallery);
-          var answer = _results;
-          var prob = _prob;
-          if (_results != null) {
-            showDialog(
-                context: context,
-                builder: (context) =>
-                    AlertDialog(title: Text('test'), content: Text(_results!)));
-          } else {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                    title: Text('test'), content: Text(answer.toString())));
-          }
-        }
-      }
-    });
->>>>>>> a37fd2552cadd4336329f92641c6e67771918327
   }
 }
