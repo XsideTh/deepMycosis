@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -21,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late CameraController controller;
 
   late File _image;
-  String? _results;
-  double? _prob;
+  late String _results;
+  late double _prob;
   bool imageSelect = false;
   bool isLoading = false;
 
@@ -55,8 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future imageClassification(File image) async {
-    List<String> imagePrediction = (await classificationModel
-        .getImagePrediction(await File(image.path).readAsBytes()));
+    List<String> imagePrediction = await classificationModel
+        .getImagePrediction(await File(image.path).readAsBytes());
     print("prediction is : ${imagePrediction[0]}");
     print("with prob is : ${imagePrediction[1]}");
     setState(() {
@@ -97,18 +98,38 @@ class _HomeScreenState extends State<HomeScreen> {
     final XFile? pickedFile = await _picker.pickImage(
       source: source,
     );
+
     setState(() {
       isLoading = true;
       imageSelect = false;
     });
     File image = File(pickedFile!.path);
     await imageClassification(image);
+
+    resultShow();
+  }
+
+  void resultShow() {
     if (_results != null) {
+      var prob = _prob;
+      var probResult;
+      if (prob! < 0.318) {
+        prob = 1 - prob;
+      }
+      if (prob! > 0.85) {
+        probResult = "High probability";
+      } else if (prob! > 0.5 && prob! < 0.85) {
+        probResult = "Medium probability";
+      } else {
+        probResult = "Low probability";
+      }
+
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
               title: Text('Result'),
-              content: Text(_results! + " with prob " + _prob.toString())));
+              content: Text(
+                  "There is " + probResult + " That this is " + _results!)));
     } else {
       showDialog(
           context: context,

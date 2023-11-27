@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
@@ -82,9 +84,9 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   AspectRatio(
-                      aspectRatio: 2 / 3, child: CameraPreview(controller)),
+                      aspectRatio: 52 / 99, child: CameraPreview(controller)),
                   AspectRatio(
-                      aspectRatio: 2 / 3,
+                      aspectRatio: 52 / 99,
                       child: Image.asset(
                         'assets/images/camera-overlay-conceptcoder.png',
                         fit: BoxFit.cover,
@@ -92,9 +94,9 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                   InkWell(
                     onTap: () => onTakePicture(),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
                       child: CircleAvatar(
-                        radius: 30.0,
+                        radius: 35.0,
                         backgroundColor: Colors.white,
                       ),
                     ),
@@ -147,23 +149,46 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
           await imageClassification(File(crop_image.path));
-          if (_results != null) {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                    title: Text('Result'),
-                    content:
-                        Text(_results! + " with prob " + _prob.toString())));
-          } else {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                    title: Text('Result'),
-                    content: Text("error result is null")));
-          }
+
+          context.goNamed(ResultScreen.routeName, queryParams: {
+            'image': image.path,
+            'result': _results,
+            'prob': _prob.toString()
+          });
+
+          resultShow();
         }
       }
     });
+  }
+
+  void resultShow() {
+    if (_results != null) {
+      var prob = _prob;
+      var probResult;
+      if (prob! < 0.318) {
+        prob = 1 - prob;
+      }
+      if (prob! > 0.87) {
+        probResult = "High probability";
+      } else if (prob! > 0.5 && prob! < 0.87) {
+        probResult = "Medium probability";
+      } else {
+        probResult = "Low probability";
+      }
+
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: Text('Result'),
+              content: Text(
+                  "There is " + probResult + " That this is\n" + _results!)));
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: Text('Result'), content: Text("error result is null")));
+    }
   }
 }
 

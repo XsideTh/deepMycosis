@@ -1,5 +1,6 @@
 import 'package:deepmycosis_application/camera_screen.dart';
 import 'package:deepmycosis_application/home_screen.dart';
+import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,17 +23,24 @@ class MyApp extends StatelessWidget {
       ),
       routerConfig: GoRouter(routes: [
         GoRoute(
-            path: '/',
-            name: HomeScreen.routeName,
-            pageBuilder: (context, State) => const NoTransitionPage(
-                  child: HomeScreen(),
-                )),
+          path: '/',
+          name: HomeScreen.routeName,
+          builder: (context, State) => HomeScreen(),
+        ),
         GoRoute(
-            path: '/camera',
-            name: Camera_Screen.routeName,
-            pageBuilder: (context, State) => const NoTransitionPage(
-                  child: Camera_Screen(),
-                )),
+          path: '/camera',
+          name: Camera_Screen.routeName,
+          builder: (context, State) => Camera_Screen(),
+        ),
+        GoRoute(
+          path: '/result',
+          name: ResultScreen.routeName,
+          builder: (context, State) => ResultScreen(
+            result: State.queryParams['result']!,
+            image: State.queryParams['image']!,
+            prob: State.queryParams['prob']!,
+          ),
+        ),
       ]),
     );
   }
