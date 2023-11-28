@@ -150,11 +150,11 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           await image.copy('/sdcard/Pictures/sample.jpg');
           await imageClassification(File(crop_image.path));
 
-          context.goNamed(ResultScreen.routeName, queryParams: {
-            'image': image.path,
-            'result': _results,
-            'prob': _prob.toString()
-          });
+          // context.goNamed(ResultScreen.routeName, queryParams: {
+          //   'image': image.path,
+          //   'result': _results,
+          //   'prob': _prob.toString()
+          // });
 
           resultShow();
         }
