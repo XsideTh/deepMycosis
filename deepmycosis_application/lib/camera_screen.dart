@@ -168,14 +168,14 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
   void resultShow() {
     if (_results != null) {
-      var prob = _prob;
+      var prob = _prob!;
       var probResult;
-      if (prob! < 0.318) {
+      if (prob < 0.318) {
         prob = 1 - prob;
       }
-      if (prob! > 0.87) {
+      if (prob > 0.87) {
         probResult = "High probability";
-      } else if (prob! > 0.5 && prob! < 0.87) {
+      } else if (prob > 0.5 && prob < 0.87) {
         probResult = "Medium probability";
       } else {
         probResult = "Low probability";

@@ -112,14 +112,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void resultShow() {
     if (_results != null) {
-      var prob = _prob;
+      var prob = _prob!;
       var probResult;
-      if (prob! < 0.318) {
+      if (prob < 0.318) {
         prob = 1 - prob;
       }
-      if (prob! > 0.85) {
+      if (prob > 0.85) {
         probResult = "High probability";
-      } else if (prob! > 0.5 && prob! < 0.85) {
+      } else if (prob > 0.5 && prob < 0.85) {
         probResult = "Medium probability";
       } else {
         probResult = "Low probability";
