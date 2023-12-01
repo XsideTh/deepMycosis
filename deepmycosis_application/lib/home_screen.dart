@@ -37,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future loadModel() async {
     try {
-      classificationModel = await PytorchLite.loadClassificationModel(
-          "assets/model/model.pt", 224, 224, 2,
-          labelPath: "assets/model/labels.txt");
+      classificationModel = await PytorchLite.loadClassificationModel(//โหลด model โดยการใช้ 
+          "assets/model/model.pt", 224, 224, 2,  //path model ความกว้าง ความสูง ของรูป 
+          labelPath: "assets/model/labels.txt"); //และ path label
     } catch (e) {
       if (e is PlatformException) {
         print("only supported for android, Error is $e");
@@ -79,9 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             ElevatedButton(
                 onPressed: () => context.go("/camera"), child: Text("Camera")),
-            ElevatedButton(
+
+            ElevatedButton(//เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
+
           ],
           alignment: MainAxisAlignment.center,
           buttonHeight: 50,
@@ -98,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final XFile? pickedFile = await _picker.pickImage(
       source: source,
     );
-
     setState(() {
       isLoading = true;
       imageSelect = false;
@@ -123,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         probResult = "Low probability";
       }
-
       showDialog(
           context: context,
           builder: (context) => AlertDialog(

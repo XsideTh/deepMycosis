@@ -56,17 +56,19 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 
   Future imageClassification(File image) async {
-    List<String> imagePrediction = await classificationModel
+
+    List<String> imagePrediction = await classificationModel//ค่าที่รับมาเป็น list
         .getImagePrediction(await File(image.path).readAsBytes());
-    print("prediction is : ${imagePrediction[0]}");
-    print("with prob is : ${imagePrediction[1]}");
+    print("prediction is : ${imagePrediction[0]}");//ค่าตัวแรกของ list จะบอกว่าเป็น pythium หรือไม่
+    print("with prob is : ${imagePrediction[1]}");//ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
     setState(() {
-      _results = imagePrediction[0];
-      _prob = double.parse(imagePrediction[1]);
+      _results = imagePrediction[0];//เก็บค่าตัวแรกของ list
+      _prob = double.parse(imagePrediction[1]);////เก็บค่าตัวสองของ list
       _image = image;
       imageSelect = true;
       isLoading = false;
     });
+
   }
 
   @override
@@ -84,9 +86,9 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   AspectRatio(
-                      aspectRatio: 52 / 99, child: CameraPreview(controller)),
+                      aspectRatio: 2 / 3, child: CameraPreview(controller)),
                   AspectRatio(
-                      aspectRatio: 52 / 99,
+                      aspectRatio: 2 / 3,
                       child: Image.asset(
                         'assets/images/camera-overlay-conceptcoder.png',
                         fit: BoxFit.cover,
@@ -94,9 +96,9 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                   InkWell(
                     onTap: () => onTakePicture(),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: CircleAvatar(
-                        radius: 35.0,
+                        radius: 30.0,
                         backgroundColor: Colors.white,
                       ),
                     ),
@@ -113,9 +115,9 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 
   Future<void> initialzationCamera() async {
-    var cameras = await availableCameras();
-    controller = CameraController(
-        cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
+    var cameras = await availableCameras();//คำสั่งที่ใช้ในการทำให้กล้องพร้อมที่จะใช้งานกล้อง
+    controller = CameraController(// controller ทำการเรียกใช้งานกล้องโดยใช้กล้องหลัง และมีความระเอียดปานกลาง
+        cameras[EnumCameraDescription.back.index], ResolutionPreset.medium,
         imageFormatGroup: ImageFormatGroup.yuv420);
     await controller.initialize();
   }
@@ -135,12 +137,14 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 
   onTakePicture() async {
+    //controller ทำการถ่ายรูปเก็บไว้ในตัวแปล xfile แล้วทำงานภายในต่อ
     await controller.takePicture().then((XFile xfile) async {
       if (mounted) {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
-          var crop_image = await Future.value(
-              FlutterNativeImage.cropImage(xfile.path, 224, 154, 175, 175));
+          var crop_image = await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
+            //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
+              FlutterNativeImage.cropImage(xfile.path, 224, 154, 224, 224));
 
           //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
@@ -148,7 +152,8 @@ class _Camera_ScreenState extends State<Camera_Screen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
-          await imageClassification(File(crop_image.path));
+
+          await imageClassification(File(crop_image.path));//นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
 
           // context.goNamed(ResultScreen.routeName, queryParams: {
           //   'image': image.path,
@@ -161,7 +166,6 @@ class _Camera_ScreenState extends State<Camera_Screen> {
       }
     });
   }
-
   void resultShow() {
     if (_results != null) {
       var prob = _prob;
@@ -176,7 +180,6 @@ class _Camera_ScreenState extends State<Camera_Screen> {
       } else {
         probResult = "Low probability";
       }
-
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -192,4 +195,4 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 }
 
-enum EnumCameraDescription { front, back }
+enum EnumCameraDescription { back, front }
