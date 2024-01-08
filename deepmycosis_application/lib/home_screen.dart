@@ -37,8 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future loadModel() async {
     try {
-      classificationModel = await PytorchLite.loadClassificationModel(//โหลด model โดยการใช้ 
-          "assets/model/model.pt", 224, 224, 2,  //path model ความกว้าง ความสูง ของรูป 
+      //โหลด model โดยการใช้
+      classificationModel = await PytorchLite.loadClassificationModel(
+          //path model ความกว้าง ความสูง ของรูป
+          "assets/model/model.pt",
+          224,
+          224,
+          2,
           labelPath: "assets/model/labels.txt"); //และ path label
     } catch (e) {
       if (e is PlatformException) {
@@ -79,11 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             ElevatedButton(
                 onPressed: () => context.go("/camera"), child: Text("Camera")),
-
-            ElevatedButton(//เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
+            ElevatedButton(
+                //เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
-
           ],
           alignment: MainAxisAlignment.center,
           buttonHeight: 50,
@@ -100,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final XFile? pickedFile = await _picker.pickImage(
       source: source,
     );
+
     setState(() {
       isLoading = true;
       imageSelect = false;
@@ -107,29 +112,28 @@ class _HomeScreenState extends State<HomeScreen> {
     File image = File(pickedFile!.path);
     await imageClassification(image);
 
-    resultShow();
+    resultShow(pickedFile!.path);
   }
 
-  void resultShow() {
+  void resultShow(String image) {
     if (_results != null) {
-      var prob = _prob!;
+      var prob = _prob;
       var probResult;
-      if (prob < 0.318) {
+      if (prob! < 0.318) {
         prob = 1 - prob;
       }
-      if (prob > 0.85) {
-        probResult = "High probability";
-      } else if (prob > 0.5 && prob < 0.85) {
-        probResult = "Medium probability";
+      if (prob! > 0.87) {
+        probResult = "There is High probability That this is " + _results!;
+      } else if (prob! > 0.5 && prob! < 0.87) {
+        probResult = "There is Medium probability That this is " + _results!;
       } else {
-        probResult = "Low probability";
+        probResult = "There is Low probability That this is " + _results!;
       }
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-              title: Text('Result'),
-              content: Text(
-                  "There is " + probResult + " That this is " + _results!)));
+
+      context.goNamed(ResultScreen.routeName, queryParams: {
+        'image': image,
+        'result': probResult,
+      });
     } else {
       showDialog(
           context: context,

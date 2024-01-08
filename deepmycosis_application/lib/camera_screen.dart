@@ -56,19 +56,20 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 
   Future imageClassification(File image) async {
-
-    List<String> imagePrediction = await classificationModel//ค่าที่รับมาเป็น list
-        .getImagePrediction(await File(image.path).readAsBytes());
-    print("prediction is : ${imagePrediction[0]}");//ค่าตัวแรกของ list จะบอกว่าเป็น pythium หรือไม่
-    print("with prob is : ${imagePrediction[1]}");//ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
+    List<String> imagePrediction =
+        await classificationModel //ค่าที่รับมาเป็น list
+            .getImagePrediction(await File(image.path).readAsBytes());
+    print(
+        "prediction is : ${imagePrediction[0]}"); //ค่าตัวแรกของ list จะบอกว่าเป็น pythium หรือไม่
+    print(
+        "with prob is : ${imagePrediction[1]}"); //ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
     setState(() {
-      _results = imagePrediction[0];//เก็บค่าตัวแรกของ list
-      _prob = double.parse(imagePrediction[1]);////เก็บค่าตัวสองของ list
+      _results = imagePrediction[0]; //เก็บค่าตัวแรกของ list
+      _prob = double.parse(imagePrediction[1]); ////เก็บค่าตัวสองของ list
       _image = image;
       imageSelect = true;
       isLoading = false;
     });
-
   }
 
   @override
@@ -98,7 +99,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: CircleAvatar(
-                        radius: 30.0,
+                        radius: 35.0,
                         backgroundColor: Colors.white,
                       ),
                     ),
@@ -115,9 +116,12 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 
   Future<void> initialzationCamera() async {
-    var cameras = await availableCameras();//คำสั่งที่ใช้ในการทำให้กล้องพร้อมที่จะใช้งานกล้อง
-    controller = CameraController(// controller ทำการเรียกใช้งานกล้องโดยใช้กล้องหลัง และมีความระเอียดปานกลาง
-        cameras[EnumCameraDescription.back.index], ResolutionPreset.medium,
+    var cameras =
+        await availableCameras(); //คำสั่งที่ใช้ในการทำให้กล้องพร้อมที่จะใช้งานกล้อง
+    controller = CameraController(
+        // controller ทำการเรียกใช้งานกล้องโดยใช้กล้องหลัง และมีความระเอียดปานกลาง
+        cameras[EnumCameraDescription.front.index],
+        ResolutionPreset.medium,
         imageFormatGroup: ImageFormatGroup.yuv420);
     await controller.initialize();
   }
@@ -142,9 +146,10 @@ class _Camera_ScreenState extends State<Camera_Screen> {
       if (mounted) {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
-          var crop_image = await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
-            //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
-              FlutterNativeImage.cropImage(xfile.path, 224, 154, 224, 224));
+          var crop_image =
+              await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
+                  //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
+                  FlutterNativeImage.cropImage(xfile.path, 224, 154, 175, 175));
 
           //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
@@ -152,40 +157,34 @@ class _Camera_ScreenState extends State<Camera_Screen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
+          await imageClassification(File(crop_image
+              .path)); //นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
 
-          await imageClassification(File(crop_image.path));//นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
-
-          // context.goNamed(ResultScreen.routeName, queryParams: {
-          //   'image': image.path,
-          //   'result': _results,
-          //   'prob': _prob.toString()
-          // });
-
-          resultShow();
+          resultShow(crop_image.path);
         }
       }
     });
   }
-  void resultShow() {
+
+  void resultShow(String image) {
     if (_results != null) {
-      var prob = _prob!;
+      var prob = _prob;
       var probResult;
-      if (prob < 0.318) {
+      if (prob! < 0.318) {
         prob = 1 - prob;
       }
-      if (prob > 0.87) {
-        probResult = "High probability";
-      } else if (prob > 0.5 && prob < 0.87) {
-        probResult = "Medium probability";
+      if (prob! > 0.87) {
+        probResult = "There is High probability That this is " + _results!;
+      } else if (prob! > 0.5 && prob! < 0.87) {
+        probResult = "There is Medium probability That this is " + _results!;
       } else {
-        probResult = "Low probability";
+        probResult = "There is Low probability That this is " + _results!;
       }
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-              title: Text('Result'),
-              content: Text(
-                  "There is " + probResult + " That this is\n" + _results!)));
+
+      context.goNamed(ResultScreen.routeName, queryParams: {
+        'image': '/sdcard/Pictures/sample.jpg',
+        'result': probResult,
+      });
     } else {
       showDialog(
           context: context,
@@ -195,4 +194,4 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   }
 }
 
-enum EnumCameraDescription { back, front }
+enum EnumCameraDescription { front, back }
