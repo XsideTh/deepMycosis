@@ -1,5 +1,6 @@
 import 'package:deepmycosis_application/camera_screen.dart';
 import 'package:deepmycosis_application/home_screen.dart';
+import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,13 @@ class MyApp extends StatelessWidget {
           name: ResultScreen.routeName,
           builder: (context, State) => ResultScreen(
             result: State.queryParams['result']!,
+            image: State.queryParams['image']!,
+          ),
+        ),
+        GoRoute(
+          path: '/modeling',
+          name: modeling.routeName,
+          builder: (context, State) => modeling(
             image: State.queryParams['image']!,
           ),
         ),

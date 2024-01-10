@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:deepmycosis_application/result_screen.dart';
+import 'package:deepmycosis_application/modeling.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
@@ -32,21 +33,6 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   @override
   void initState() {
     super.initState();
-    loadModel();
-  }
-
-  Future loadModel() async {
-    try {
-      classificationModel = await PytorchLite.loadClassificationModel(
-          "assets/model/model.pt", 224, 224, 2,
-          labelPath: "assets/model/labels.txt");
-    } catch (e) {
-      if (e is PlatformException) {
-        print("only supported for android, Error is $e");
-      } else {
-        print("Error is $e");
-      }
-    }
   }
 
   @override
@@ -149,7 +135,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           var crop_image =
               await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
                   //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
-                  FlutterNativeImage.cropImage(xfile.path, 224, 154, 175, 175));
+                  FlutterNativeImage.cropImage(xfile.path, 224, 154, 224, 224));
 
           //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
@@ -157,12 +143,23 @@ class _Camera_ScreenState extends State<Camera_Screen> {
 
           // copy the file to a new path
           await image.copy('/sdcard/Pictures/sample.jpg');
+
+          gotoModel(crop_image.path);
+
+          dispose();
+/*
           await imageClassification(File(crop_image
               .path)); //นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
 
-          resultShow(crop_image.path);
+          resultShow(crop_image.path);*/
         }
       }
+    });
+  }
+
+  void gotoModel(String image) {
+    context.goNamed(modeling.routeName, queryParams: {
+      'image': image,
     });
   }
 

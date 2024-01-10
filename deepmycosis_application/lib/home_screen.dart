@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,14 +106,18 @@ class _HomeScreenState extends State<HomeScreen> {
       source: source,
     );
 
+    context.goNamed(modeling.routeName, params: {'image': pickedFile!.path});
+    dispose();
+    /*
     setState(() {
       isLoading = true;
       imageSelect = false;
     });
+
     File image = File(pickedFile!.path);
     await imageClassification(image);
 
-    resultShow(pickedFile!.path);
+    resultShow(pickedFile!.path);*/
   }
 
   void resultShow(String image) {
