@@ -1,15 +1,10 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pytorch_lite/pytorch_lite.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,15 +15,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late CameraController controller;
-
   late File _image;
   late String _results;
   late double _prob;
   bool imageSelect = false;
   bool isLoading = false;
-
-  late ClassificationModel classificationModel;
 
   @override
   void initState() {
@@ -48,6 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text('Deep Mycosis'),
         ),
         body: ButtonBar(
+          alignment: MainAxisAlignment.center,
+          buttonHeight: 50,
+          buttonMinWidth: 200,
+          buttonPadding: EdgeInsets.all(40),
+          overflowButtonSpacing: 10,
+          overflowDirection: VerticalDirection.down,
           children: <Widget>[
             ElevatedButton(
                 onPressed: () => context.go("/camera"), child: Text("Camera")),
@@ -56,13 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
           ],
-          alignment: MainAxisAlignment.center,
-          buttonHeight: 50,
-          buttonMinWidth: 200,
-          buttonPadding: EdgeInsets.all(40),
-          overflowButtonSpacing: 10,
-          overflowDirection: VerticalDirection.down,
-          mainAxisSize: MainAxisSize.max,
         ));
   }
 
@@ -75,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.goNamed(modeling.routeName, queryParams: {
       'image': pickedFile!.path,
     });
+
     /*
     setState(() {
       isLoading = true;

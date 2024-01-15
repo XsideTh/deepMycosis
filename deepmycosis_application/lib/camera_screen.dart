@@ -4,12 +4,8 @@ import 'package:deepmycosis_application/result_screen.dart';
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pytorch_lite/pytorch_lite.dart';
 
 class Camera_Screen extends StatefulWidget {
   const Camera_Screen({super.key});
@@ -28,8 +24,6 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   bool imageSelect = false;
   bool isLoading = false;
 
-  late ClassificationModel classificationModel;
-
   @override
   void initState() {
     super.initState();
@@ -39,23 +33,6 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   void dispose() {
     super.dispose();
     //Tflite.close();
-  }
-
-  Future imageClassification(File image) async {
-    List<String> imagePrediction =
-        await classificationModel //ค่าที่รับมาเป็น list
-            .getImagePrediction(await File(image.path).readAsBytes());
-    print(
-        "prediction is : ${imagePrediction[0]}"); //ค่าตัวแรกของ list จะบอกว่าเป็น pythium หรือไม่
-    print(
-        "with prob is : ${imagePrediction[1]}"); //ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
-    setState(() {
-      _results = imagePrediction[0]; //เก็บค่าตัวแรกของ list
-      _prob = double.parse(imagePrediction[1]); ////เก็บค่าตัวสองของ list
-      _image = image;
-      imageSelect = true;
-      isLoading = false;
-    });
   }
 
   @override
@@ -109,21 +86,8 @@ class _Camera_ScreenState extends State<Camera_Screen> {
         cameras[EnumCameraDescription.front.index],
         ResolutionPreset.medium,
         imageFormatGroup: ImageFormatGroup.yuv420);
+    controller.setFlashMode(FlashMode.off);
     await controller.initialize();
-  }
-
-  Future getFilePath() async {
-    Directory appDocumentsDirectory =
-        await getApplicationDocumentsDirectory(); // 1
-    String appDocumentsPath = appDocumentsDirectory.path; // 2
-    String filePath = '$appDocumentsPath/sample.png'; // 3
-    print(filePath);
-    return filePath;
-  }
-
-  void saveFile(var contents) async {
-    File file = File(await getFilePath()); // 1
-    file.writeAsBytes(contents); // 2
   }
 
   onTakePicture() async {
@@ -135,18 +99,22 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           var crop_image =
               await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
                   //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
-                  FlutterNativeImage.cropImage(xfile.path, 224, 154, 224, 224));
+                  FlutterNativeImage.cropImage(xfile.path, 224, 154, 175, 175));
 
-          //saveFile(Image.file(File(xfile.path)).image);
           // using your method of getting an image
           final File image = File(crop_image.path);
 
-          // copy the file to a new path
-          await image.copy('/sdcard/Pictures/sample.jpg');
+          //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
+          if (await File('/sdcard/Pictures/sample.jpg').exists()) {
+            await File('/sdcard/Pictures/sample.jpg').delete();
+            await image.copy('/sdcard/Pictures/sample.jpg');
+          } else {
+            // copy the file to a new path
+            await image.copy('/sdcard/Pictures/sample.jpg');
+          }
 
           gotoModel(crop_image.path);
 
-          dispose();
 /*
           await imageClassification(File(crop_image
               .path)); //นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
@@ -163,32 +131,19 @@ class _Camera_ScreenState extends State<Camera_Screen> {
     });
   }
 
-  void resultShow(String image) {
-    if (_results != null) {
-      var prob = _prob;
-      var probResult;
-      if (prob! < 0.318) {
-        prob = 1 - prob;
-      }
-      if (prob! > 0.87) {
-        probResult = "There is High probability That this is " + _results!;
-      } else if (prob! > 0.5 && prob! < 0.87) {
-        probResult = "There is Medium probability That this is " + _results!;
-      } else {
-        probResult = "There is Low probability That this is " + _results!;
-      }
+  // Future getFilePath() async {
+  //   Directory appDocumentsDirectory =
+  //       await getApplicationDocumentsDirectory(); // 1
+  //   String appDocumentsPath = appDocumentsDirectory.path; // 2
+  //   String filePath = '$appDocumentsPath/sample.png'; // 3
+  //   print(filePath);
+  //   return filePath;
+  // }
 
-      context.goNamed(ResultScreen.routeName, queryParams: {
-        'image': '/sdcard/Pictures/sample.jpg',
-        'result': probResult,
-      });
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-              title: Text('Result'), content: Text("error result is null")));
-    }
-  }
+  // void saveFile(var contents) async {
+  //   File file = File(await getFilePath()); // 1
+  //   file.writeAsBytes(contents); // 2
+  // }
 }
 
 enum EnumCameraDescription { front, back }
