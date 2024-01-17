@@ -13,7 +13,11 @@ class modeling extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    main(context);
+    var count = 0;
+    if (count == 0) {
+      main(context);
+      count++;
+    }
 
     return Center(
       child: CircularProgressIndicator(),

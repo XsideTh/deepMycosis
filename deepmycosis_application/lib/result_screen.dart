@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path/path.dart' as path;
 
 class ResultScreen extends StatelessWidget {
-  final String? result, image, prob;
+  String? result, image, prob;
 
-  const ResultScreen({
+  ResultScreen({
     super.key,
     required this.result,
     required this.image,
@@ -18,6 +21,33 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String? datetime = tsdate.day.toString() +
+        "-" +
+        tsdate.month.toString() +
+        "-" +
+        tsdate.year.toString() +
+        "_" +
+        tsdate.hour.toString() +
+        "-" +
+        tsdate.minute.toString();
+    // File picture = File("/sdcard/Pictures/sample.jpg");
+
+    String name = "${result}_${datetime}_${prob!}.jpg";
+    if (!result!.contains("Non")) {
+      name = "Pythium_${datetime}_${prob!}.jpg";
+    }
+
+    File picture = File(image!);
+    print('Original path: ${picture.path}');
+    String dir = path.dirname(picture.path);
+    String newPath = path.join(dir, name);
+    print('NewPath: ${newPath}');
+    picture.renameSync(newPath);
+
+    GallerySaver.saveImage(newPath, albumName: "pythium");
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -26,7 +56,7 @@ class ResultScreen extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.file(File(image!)),
+            Image.file(File(newPath)),
             Center(
               child: Visibility(
                 visible: result != null,

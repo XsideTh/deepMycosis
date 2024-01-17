@@ -62,6 +62,18 @@ class _HomeScreenState extends State<HomeScreen> {
       source: source,
     );
 
+    // using your method of getting an image
+    //final File image = File(pickedFile!.path);
+
+    // //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
+    // if (await File('/Pictures/sample.jpg').exists()) {
+    //   await File('/Pictures/sample.jpg').delete();
+    //   await image.copy('/Pictures/sample.jpg');
+    // } else {
+    //   // copy the file to a new path
+    //   await image.copy('/Pictures/sample.jpg');
+    // }
+
     context.goNamed(modeling.routeName, queryParams: {
       'image': pickedFile!.path,
     });

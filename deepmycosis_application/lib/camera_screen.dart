@@ -5,6 +5,7 @@ import 'package:deepmycosis_application/modeling.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:go_router/go_router.dart';
 
 class Camera_Screen extends StatefulWidget {
@@ -105,13 +106,13 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           final File image = File(crop_image.path);
 
           //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
-          if (await File('/sdcard/Pictures/sample.jpg').exists()) {
-            await File('/sdcard/Pictures/sample.jpg').delete();
-            await image.copy('/sdcard/Pictures/sample.jpg');
-          } else {
-            // copy the file to a new path
-            await image.copy('/sdcard/Pictures/sample.jpg');
-          }
+          // if (await File('/sdcard/Pictures/sample.jpg').exists()) {
+          //   await File('/sdcard/Pictures/sample.jpg').delete();
+          //   await image.copy('/sdcard/Pictures/sample.jpg');
+          // } else {
+          //   // copy the file to a new path
+          //   await image.copy('/sdcard/Pictures/sample.jpg');
+          // }
 
           gotoModel(crop_image.path);
 

@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^2.1.1 #ใช้ในการบอกว่า path ของโปรแกรมอยู่ส่วนใดจึงจะสามารถ save ได้
   flutter_native_image: ^0.0.6 #ใช้ในการ crop รูปภาพให้เหลือเฉพาะเชื้อ
   pytorch_lite: ^4.2.2 #ใช้ในการ run model แต่ต้องเป็น model ที่เป็น torch script
+  gallery_saver: ^2.3.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
