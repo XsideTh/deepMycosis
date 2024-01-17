@@ -25,7 +25,8 @@ class modeling extends StatelessWidget {
     var probResult = await imageClassification(image, classificationModel!);
     context.goNamed(ResultScreen.routeName, queryParams: {
       'image': image,
-      'result': probResult,
+      'result': probResult[0],
+      'prob': probResult[1],
     });
   }
 
@@ -51,7 +52,7 @@ class modeling extends StatelessWidget {
     }
   }
 
-  Future<String> imageClassification(
+  Future<List> imageClassification(
       String image, ClassificationModel classificationModel) async {
     List<String> imagePrediction =
         await classificationModel //ค่าที่รับมาเป็น list
@@ -62,21 +63,16 @@ class modeling extends StatelessWidget {
         "with prob is : ${imagePrediction[1]}"); //ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
     var _results = imagePrediction[0]; //เก็บค่าตัวแรกของ list
     var _prob = double.parse(imagePrediction[1]); ////เก็บค่าตัวสองของ list
-    var probResult;
+    var prob;
 
     if (_results != null) {
-      var prob = _prob;
+      prob = _prob;
       if (prob! < 0.318) {
         prob = 1 - prob;
       }
-      if (prob! > 0.87) {
-        probResult = "There is High probability That this is " + _results!;
-      } else if (prob! > 0.5 && prob! < 0.87) {
-        probResult = "There is Medium probability That this is " + _results!;
-      } else {
-        probResult = "There is Low probability That this is " + _results!;
-      }
     }
-    return probResult;
+
+    print(prob.toStringAsFixed(2));
+    return [_results, prob.toStringAsFixed(2) as String];
   }
 }

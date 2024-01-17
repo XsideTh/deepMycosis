@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
           builder: (context, State) => ResultScreen(
             result: State.queryParams['result']!,
             image: State.queryParams['image']!,
+            prob: State.queryParams['prob']!,
           ),
         ),
         GoRoute(

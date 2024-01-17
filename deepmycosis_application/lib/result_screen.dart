@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ResultScreen extends StatelessWidget {
-  final String? result, image;
+  final String? result, image, prob;
 
   const ResultScreen({
     super.key,
     required this.result,
     required this.image,
+    required this.prob,
   });
   static const routeName = 'result-screen';
 
@@ -30,7 +31,17 @@ class ResultScreen extends StatelessWidget {
               child: Visibility(
                 visible: result != null,
                 child: Text(
-                  "${result}",
+                  "$result",
+                  maxLines: 3,
+                  style: TextStyle(fontSize: 40.0),
+                ),
+              ),
+            ),
+            Center(
+              child: Visibility(
+                visible: result != null,
+                child: Text(
+                  "($prob)",
                   maxLines: 3,
                   style: TextStyle(fontSize: 20.0),
                 ),
