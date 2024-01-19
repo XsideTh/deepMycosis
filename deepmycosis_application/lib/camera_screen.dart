@@ -107,7 +107,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           var crop_image =
               await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
                   //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
-                  FlutterNativeImage.cropImage(xfile.path, middleX-((size/2).round()), middleY-((size/2).round()), size, size));
+                  FlutterNativeImage.cropImage(xfile.path, middleX, middleY, size, size));
 
           // using your method of getting an image
           final File image = File(crop_image.path);
