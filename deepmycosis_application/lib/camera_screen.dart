@@ -98,16 +98,22 @@ class _Camera_ScreenState extends State<Camera_Screen> {
         // ignore: unnecessary_null_comparison
         if (xfile != null) {
           File fullimage = File(xfile.path);
-          var decodedImage = await decodeImageFromList(fullimage.readAsBytesSync());
+          var decodedImage =
+              await decodeImageFromList(fullimage.readAsBytesSync());
 
           int middleX = (decodedImage.width / 2).round();
           int middleY = (decodedImage.height / 2).round();
           int size = 224;
-          
-          var crop_image =
-              await Future.value(//Future.value คือการนำค่าจาก function มาใช้ฏ
-                  //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
-                  FlutterNativeImage.cropImage(xfile.path, middleX-((size/1).round()), middleY-((size/1).round()), size, size));
+
+          var crop_image = await Future.value(
+              //Future.value คือการนำค่าจาก function มาใช้ฏ
+              //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
+              FlutterNativeImage.cropImage(
+                  xfile.path,
+                  middleX - ((size / 2).round()),
+                  middleY - ((size / 2).round()),
+                  size,
+                  size));
 
           // using your method of getting an image
           final File image = File(crop_image.path);
