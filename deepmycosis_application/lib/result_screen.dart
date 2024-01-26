@@ -23,6 +23,10 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String minute = tsdate.minute.toString();
+    String second = tsdate.minute.toString();
+    if (minute.length <= 1) minute = "0" + minute;
+    if (second.length <= 1) second = "0" + second;
     String? datetime = tsdate.day.toString() +
         "-" +
         tsdate.month.toString() +
@@ -31,22 +35,23 @@ class ResultScreen extends StatelessWidget {
         "_" +
         tsdate.hour.toString() +
         "-" +
-        tsdate.minute.toString();
+        minute +
+        "-" +
+        second;
     // File picture = File("/sdcard/Pictures/sample.jpg");
 
     String name = "${result}_${datetime}_${prob!}.jpg";
+    File picture = File(image!);
     if (!result!.contains("Non")) {
       name = "Pythium_${datetime}_${prob!}.jpg";
     }
-
-    File picture = File(image!);
     print('Original path: ${picture.path}');
     String dir = path.dirname(picture.path);
     String newPath = path.join(dir, name);
     print('NewPath: ${newPath}');
     picture.renameSync(newPath);
 
-    GallerySaver.saveImage(newPath, albumName: "pythium");
+    GallerySaver.saveImage(newPath, albumName: result!);
 
     return MaterialApp(
       home: Scaffold(
