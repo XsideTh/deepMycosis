@@ -24,7 +24,7 @@ class ResultScreen extends StatelessWidget {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp);
     String minute = tsdate.minute.toString();
-    String second = tsdate.minute.toString();
+    String second = tsdate.second.toString();
     if (minute.length <= 1) minute = "0" + minute;
     if (second.length <= 1) second = "0" + second;
     String? datetime = tsdate.day.toString() +
