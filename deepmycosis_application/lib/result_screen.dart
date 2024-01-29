@@ -76,7 +76,7 @@ class ResultScreen extends StatelessWidget {
               child: Visibility(
                 visible: result != null,
                 child: Text(
-                  "($prob%)",
+                  "(with $prob% probability)",
                   maxLines: 3,
                   style: TextStyle(fontSize: 20.0),
                 ),
