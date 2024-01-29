@@ -101,13 +101,13 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           var decodedImage =
               await decodeImageFromList(fullimage.readAsBytesSync());
 
-          int multiply = ((320-(decodedImage.height / 2).round())/2).round();
-          if(multiply <= 0)
-            multiply = 1;
-          int middleX = ((decodedImage.width / 2).round())+(3*multiply);
-          int middleY = ((decodedImage.height / 2).round())-(8*multiply);
-          print("middle X is"+ middleX.toString());
-          print("middle y is"+ middleY.toString());
+          int multiply =
+              ((320 - (decodedImage.height / 2).round()) / 2).round();
+          if (multiply <= 0) multiply = 1;
+          int middleX = (decodedImage.height / 2).round();
+          int middleY = (decodedImage.width / 2).round();
+          print("middle X is" + middleX.toString());
+          print("middle y is" + middleY.toString());
           int size = 224;
 
           var crop_image = await Future.value(

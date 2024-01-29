@@ -75,6 +75,7 @@ class modeling extends StatelessWidget {
         prob = 1 - prob;
       }
     }
+    prob = prob * 100;
 
     print(prob.toStringAsFixed(2));
     return [_results, prob.toStringAsFixed(2) as String];
