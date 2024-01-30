@@ -87,7 +87,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
         cameras[EnumCameraDescription.front.index],
         ResolutionPreset.medium,
         imageFormatGroup: ImageFormatGroup.yuv420);
-    controller.setFlashMode(FlashMode.off);
+    //controller.setFlashMode(FlashMode.off);
     await controller.initialize();
   }
 
@@ -104,21 +104,34 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           int multiply =
               ((320 - (decodedImage.height / 2).round()) / 2).round();
           if (multiply <= 0) multiply = 1;
-          int middleX = (decodedImage.height / 2).round();
-          int middleY = (decodedImage.width / 2).round();
+          int middleX = (decodedImage.width / 2).round();
+          int middleY = (decodedImage.height / 2).round();
           print("middle X is" + middleX.toString());
           print("middle y is" + middleY.toString());
           int size = 224;
 
-          var crop_image = await Future.value(
-              //Future.value คือการนำค่าจาก function มาใช้ฏ
-              //ตัดรูปภาพขนาด 175*175 ที่ตำแหน่ง x:224 Y:154
-              FlutterNativeImage.cropImage(
-                  xfile.path,
-                  middleX - ((size / 2).round()),
-                  middleY - ((size / 2).round()),
-                  size,
-                  size));
+          var crop_image;
+          if (middleY <= 340) {
+            crop_image = await Future.value(
+                //Future.value คือการนำค่าจาก function มาใช้ฏ
+                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
+                FlutterNativeImage.cropImage(
+                    xfile.path,
+                    (middleX + 10) - ((size / 2).round()),
+                    (middleY - 30) - ((size / 2).round()),
+                    size,
+                    size));
+          } else {
+            crop_image = await Future.value(
+                //Future.value คือการนำค่าจาก function มาใช้
+                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
+                FlutterNativeImage.cropImage(
+                    xfile.path,
+                    (middleY - 30) - ((size / 2).round()),
+                    (middleX - 10) - ((size / 2).round()),
+                    size,
+                    size));
+          }
 
           // using your method of getting an image
           final File image = File(crop_image.path);
