@@ -34,17 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Deep Mycosis'),
+    return Container(
+        constraints: BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover),
         ),
-        body: ButtonBar(
-          alignment: MainAxisAlignment.center,
-          buttonHeight: 50,
-          buttonMinWidth: 200,
-          buttonPadding: EdgeInsets.all(40),
-          overflowButtonSpacing: 10,
-          overflowDirection: VerticalDirection.down,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
                 onPressed: () => context.go("/camera"), child: Text("Camera")),
@@ -53,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
           ],
-        ));
+        ) // Foreground widget here
+        );
   }
 
   Future pickImage(ImageSource source) async {
