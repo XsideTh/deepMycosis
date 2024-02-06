@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
@@ -40,18 +39,19 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text('Deep Mycosis'),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        body: Center(
+          child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ElevatedButton(
-                onPressed: () => context.go("/camera"), child: Text("Camera"),
+                onPressed: () => context.go("/camera"), child: Text("Camera")
                 ),
             ElevatedButton(
                 //เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
           ],
-        ));
+        )));
   }
 
   Future pickImage(ImageSource source) async {

@@ -37,6 +37,7 @@ dependencies:
   flutter_native_image: ^0.0.6 #ใช้ในการ crop รูปภาพให้เหลือเฉพาะเชื้อ
   pytorch_lite: ^4.2.2 #ใช้ในการ run model แต่ต้องเป็น model ที่เป็น torch script
   gallery_saver: ^2.3.2
+  flutter_native_splash: ^2.0.1+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,6 +53,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_native_splash: 
+  background_image: assets/images/splash_background.png
+  image: assets/images/splash.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
