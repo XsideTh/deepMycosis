@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
@@ -34,24 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        constraints: BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/bg.png"), fit: BoxFit.cover),
+    
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Deep Mycosis'),
         ),
-        child: Column(
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: () => context.go("/camera"), child: Text("Camera")),
+                onPressed: () => context.go("/camera"), child: Text("Camera"),
+                ),
             ElevatedButton(
                 //เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
                 onPressed: () => pickImage(ImageSource.gallery),
                 child: Text("Gallery"))
           ],
-        ) // Foreground widget here
-        );
+        ));
   }
 
   Future pickImage(ImageSource source) async {
