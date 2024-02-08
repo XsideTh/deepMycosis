@@ -64,7 +64,7 @@ class _historyState extends State<history> {
     //print(images.length);
     images.sort((a, b) => a.time.compareTo(b.time));
     images.forEach((element) {
-      print(element);
+      print(element.time);
     });
   }
 
