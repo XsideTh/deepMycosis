@@ -23,10 +23,9 @@ class _historyState extends State<history> {
 
   // Make New Function
   void _listofFiles() async {
-    final dir = await getExternalStorageDirectory();
     /*final directory = await getApplicationDocumentsDirectory(). +
         "/sdcard/Pictures";*/
-    /*final pythiumDir = new Directory(directory + "/Pythium_/");*/
+    final pythiumDir = Directory("sdcard/Pictures/Pythium_/").listSync();
     final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
 
     nonDir.forEach((img) {
@@ -40,6 +39,23 @@ class _historyState extends State<history> {
           .substring(32, 37);
       ListPythium list = new ListPythium();
       list.type = "NonPythium";
+      list.time = time;
+      list.path = img.path;
+      list.prob = prob;
+      images.add(list);
+    });
+
+    pythiumDir.forEach((img) {
+      String time = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(8, 26);
+      String prob = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(28, 33);
+      ListPythium list = new ListPythium();
+      list.type = "Pythium";
       list.time = time;
       list.path = img.path;
       list.prob = prob;
