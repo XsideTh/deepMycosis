@@ -23,17 +23,23 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String day = tsdate.day.toString();
+    String month = tsdate.month.toString();
+    String hour = tsdate.hour.toString();
     String minute = tsdate.minute.toString();
     String second = tsdate.second.toString();
+    if (day.length <= 1) minute = "0" + day;
+    if (month.length <= 1) second = "0" + month;
+    if (hour.length <= 1) minute = "0" + hour;
     if (minute.length <= 1) minute = "0" + minute;
     if (second.length <= 1) second = "0" + second;
-    String? datetime = tsdate.day.toString() +
+    String? datetime = day +
         "-" +
-        tsdate.month.toString() +
+        month +
         "-" +
         tsdate.year.toString() +
         "_" +
-        tsdate.hour.toString() +
+        hour +
         "-" +
         minute +
         "-" +

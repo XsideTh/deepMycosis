@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:deepmycosis_application/history_screen.dart';
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,31 +26,32 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
   }
-
+/*
   @override
   void dispose() {
-    super.dispose();
+    //super.dispose();
     //Tflite.close();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           title: Text('Deep Mycosis'),
         ),
         body: Center(
-          child: Column(
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ElevatedButton(
-                onPressed: () => context.go("/camera"), child: Text("Camera")
-                ),
+                onPressed: () => context.go("/camera"), child: Text("Camera")),
             ElevatedButton(
                 //เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
                 onPressed: () => pickImage(ImageSource.gallery),
-                child: Text("Gallery"))
+                child: Text("Gallery")),
+            ElevatedButton(
+                onPressed: () => context.go("/history"),
+                child: Text("History")),
           ],
         )));
   }

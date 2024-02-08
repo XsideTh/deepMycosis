@@ -1,4 +1,5 @@
 import 'package:deepmycosis_application/camera_screen.dart';
+import 'package:deepmycosis_application/history_screen.dart';
 import 'package:deepmycosis_application/home_screen.dart';
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
@@ -55,6 +56,11 @@ class MyApp extends StatelessWidget {
           builder: (context, State) => modeling(
             image: State.queryParams['image']!,
           ),
+        ),
+        GoRoute(
+          path: '/history',
+          name: history.routeName,
+          builder: (context, State) => history(),
         ),
       ]),
     );

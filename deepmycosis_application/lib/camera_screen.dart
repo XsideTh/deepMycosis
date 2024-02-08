@@ -29,12 +29,12 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   void initState() {
     super.initState();
   }
-
+/*
   @override
   void dispose() {
     super.dispose();
     //Tflite.close();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
