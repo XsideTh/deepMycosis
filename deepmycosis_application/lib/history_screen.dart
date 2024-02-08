@@ -14,7 +14,7 @@ class history extends StatefulWidget {
 }
 
 class ListPythium {
-  String? type, time, path, prob;
+  late String type, time, path, prob;
 }
 
 class _historyState extends State<history> {
@@ -62,6 +62,7 @@ class _historyState extends State<history> {
       images.add(list);
     });
     print(images.length);
+    images.sort((a, b) => a.time.compareTo(b.time));
   }
 
   @override
