@@ -61,8 +61,11 @@ class _historyState extends State<history> {
       list.prob = prob;
       images.add(list);
     });
-    print(images.length);
+    //print(images.length);
     images.sort((a, b) => a.time.compareTo(b.time));
+    images.forEach((element) {
+      print(element);
+    });
   }
 
   @override
