@@ -28,9 +28,9 @@ class ResultScreen extends StatelessWidget {
     String hour = tsdate.hour.toString();
     String minute = tsdate.minute.toString();
     String second = tsdate.second.toString();
-    if (day.length <= 1) minute = "0" + day;
-    if (month.length <= 1) second = "0" + month;
-    if (hour.length <= 1) minute = "0" + hour;
+    if (day.length <= 1) day = "0" + day;
+    if (month.length <= 1) month = "0" + month;
+    if (hour.length <= 1) hour = "0" + hour;
     if (minute.length <= 1) minute = "0" + minute;
     if (second.length <= 1) second = "0" + second;
     String? datetime = tsdate.year.toString() +

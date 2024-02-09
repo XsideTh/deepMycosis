@@ -36,7 +36,8 @@ class _historyState extends State<history> {
       String prob = img
           .toString()
           .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(32, 37);
+          .substring(31, 37);
+      print("nonpythium time : " + time + " with prob : " + prob);
       ListPythium list = new ListPythium();
       list.type = "NonPythium";
       list.time = time;
@@ -49,11 +50,12 @@ class _historyState extends State<history> {
       String time = img
           .toString()
           .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(8, 26);
+          .substring(8, 27);
       String prob = img
           .toString()
           .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(28, 33);
+          .substring(28, 34);
+      print("pyhium time : " + time + " with prob : " + prob);
       ListPythium list = new ListPythium();
       list.type = "Pythium";
       list.time = time;
@@ -62,7 +64,7 @@ class _historyState extends State<history> {
       images.add(list);
     });
     //print(images.length);
-    images.sort((a, b) => a.time.compareTo(b.time));
+    images.sort((a, b) => b.time.compareTo(a.time));
     images.forEach((element) {
       print(element.time);
     });
@@ -75,20 +77,43 @@ class _historyState extends State<history> {
       title: 'List of Files',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Get List of Files with whole Path"),
+          title: Text("Deep Mycosis"),
         ),
         body: Container(
           child: Column(
             children: <Widget>[
-              /*
               // your Content if there
               Expanded(
                 child: ListView.builder(
-                    itemCount: pythiumfile.length,
+                    itemCount: images.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Text(pythiumfile[index].toString());
+                      TextStyle styleText = TextStyle(fontSize: 20.0);
+                      return Column(children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.file(
+                                File(images[index].path),
+                                scale: 1.75,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("  type : ${images[index].type}",
+                                      style: styleText),
+                                  Text("  date : ${images[index].time}",
+                                      style: styleText),
+                                  Text("  probability : ${images[index].prob}%",
+                                      style: styleText)
+                                ],
+                              ),
+                            ])
+                      ]);
                     }),
-              )*/
+              )
             ],
           ),
         ),
