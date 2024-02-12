@@ -23,9 +23,13 @@ class _historyState extends State<history> {
 
   // Make New Function
   void _listofFiles() async {
+    
     /*final directory = await getApplicationDocumentsDirectory(). +
         "/sdcard/Pictures";*/
-    if (await Directory("sdcard/Pictures/NonPythium").exists()) {
+
+      /*final Dirtest = Directory("sdcard/Pictures").listSync();
+      Dirtest.forEach((element) {print(element);});*/
+    
       final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
       nonDir.forEach((img) {
         String time = img
@@ -46,9 +50,7 @@ class _historyState extends State<history> {
         list.prob = prob;
         images.add(list);
       });
-    }
-
-    if (await Directory("sdcard/Pictures/Pythium_").exists()) {
+    
       final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
       pythiumDir.forEach((img) {
         String time = img
@@ -74,7 +76,6 @@ class _historyState extends State<history> {
       images.forEach((element) {
         print(element.time);
       });
-    }
   }
 
   @override
