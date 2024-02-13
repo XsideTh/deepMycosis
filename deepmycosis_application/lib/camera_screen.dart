@@ -114,7 +114,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           if (middleY <= 340) {
             crop_image = await Future.value(
                 //Future.value คือการนำค่าจาก function มาใช้ฏ
-                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
+                //ตัดรูปภาพขนาด 224224 ที่ตำแหน่ง x:224 Y:154
                 FlutterNativeImage.cropImage(
                     xfile.path,
                     (middleX + 10) - ((size / 2).round()),
@@ -124,11 +124,11 @@ class _Camera_ScreenState extends State<Camera_Screen> {
           } else {
             crop_image = await Future.value(
                 //Future.value คือการนำค่าจาก function มาใช้
-                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x:224 Y:154
+                //ตัดรูปภาพขนาด 224224 ที่ตำแหน่ง x:224 Y:154
                 FlutterNativeImage.cropImage(
                     xfile.path,
                     (middleY - 30) - ((size / 2).round()),
-                    (middleX - 10) - ((size / 2).round()),
+                    (middleX - 5) - ((size / 2).round()),
                     size,
                     size));
           }
