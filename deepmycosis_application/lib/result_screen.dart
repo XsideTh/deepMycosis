@@ -50,6 +50,7 @@ class ResultScreen extends StatelessWidget {
     File picture = File(image!);
     if (!result!.contains("Non")) {
       name = "Pythium_${datetime}_${prob!}.jpg";
+      result = "Pythium";
     }
     print('Original path: ${picture.path}');
     String dir = path.dirname(picture.path);

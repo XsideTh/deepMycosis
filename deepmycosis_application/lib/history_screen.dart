@@ -23,59 +23,54 @@ class _historyState extends State<history> {
 
   // Make New Function
   void _listofFiles() async {
-    
     /*final directory = await getApplicationDocumentsDirectory(). +
         "/sdcard/Pictures";*/
 
-      /*final Dirtest = Directory("sdcard/Pictures").listSync();
+    /*final Dirtest = Directory("sdcard/Pictures").listSync();
       Dirtest.forEach((element) {print(element);});*/
-    
-      final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
-      nonDir.forEach((img) {
-        String time = img
-            .toString()
-            .substring(
-                img.toString().lastIndexOf('/') + 1, img.toString().length)
-            .substring(11, 30);
-        String prob = img
-            .toString()
-            .substring(
-                img.toString().lastIndexOf('/') + 1, img.toString().length)
-            .substring(31, 37);
-        print("nonpythium time : " + time + " with prob : " + prob);
-        ListPythium list = new ListPythium();
-        list.type = "NonPythium";
-        list.time = time;
-        list.path = img.path;
-        list.prob = prob;
-        images.add(list);
-      });
-    
-      final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
-      pythiumDir.forEach((img) {
-        String time = img
-            .toString()
-            .substring(
-                img.toString().lastIndexOf('/') + 1, img.toString().length)
-            .substring(8, 27);
-        String prob = img
-            .toString()
-            .substring(
-                img.toString().lastIndexOf('/') + 1, img.toString().length)
-            .substring(28, 34);
-        print("pyhium time : " + time + " with prob : " + prob);
-        ListPythium list = new ListPythium();
-        list.type = "Pythium";
-        list.time = time;
-        list.path = img.path;
-        list.prob = prob;
-        images.add(list);
-      });
-      //print(images.length);
-      images.sort((a, b) => b.time.compareTo(a.time));
-      images.forEach((element) {
-        print(element.time);
-      });
+
+    final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
+    nonDir.forEach((img) {
+      String time = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(11, 30);
+      String prob = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(31, 37);
+      print("nonpythium time : " + time + " with prob : " + prob);
+      ListPythium list = new ListPythium();
+      list.type = "NonPythium";
+      list.time = time;
+      list.path = img.path;
+      list.prob = prob;
+      images.add(list);
+    });
+
+    final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
+    pythiumDir.forEach((img) {
+      String time = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(8, 27);
+      String prob = img
+          .toString()
+          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
+          .substring(28, 34);
+      print("pyhium time : " + time + " with prob : " + prob);
+      ListPythium list = new ListPythium();
+      list.type = "Pythium";
+      list.time = time;
+      list.path = img.path;
+      list.prob = prob;
+      images.add(list);
+    });
+    //print(images.length);
+    images.sort((a, b) => b.time.compareTo(a.time));
+    images.forEach((element) {
+      print(element.time);
+    });
   }
 
   @override
@@ -85,7 +80,7 @@ class _historyState extends State<history> {
       title: 'List of Files',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Deep Mycosis"),
+          title: Text("Deep Mycosis: History"),
         ),
         body: Container(
           child: Column(
