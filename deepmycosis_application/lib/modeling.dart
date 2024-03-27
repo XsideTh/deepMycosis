@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 
+
 class modeling extends StatelessWidget {
   final String image;
   const modeling({super.key, required this.image});
