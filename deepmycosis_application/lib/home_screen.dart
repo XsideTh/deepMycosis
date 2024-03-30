@@ -1,7 +1,11 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
+import 'package:deepmycosis_application/history_screen.dart';
+import 'package:deepmycosis_application/modeling.dart';
+import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,86 +16,78 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late CameraController controller;
+  late File _image;
+  late String _results;
+  late double _prob;
+  bool imageSelect = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+/*
+  @override
+  void dispose() {
+    //super.dispose();
+    //Tflite.close();
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: FutureBuilder(
-          future: initialzationCamera(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  AspectRatio(
-                      aspectRatio: 2 / 3, child: CameraPreview(controller)),
-                  AspectRatio(
-                      aspectRatio: 2 / 3,
-                      child: Image.asset(
-                        'assets/images/camera-overlay-conceptcoder.png',
-                        fit: BoxFit.cover,
-                      )),
-                  InkWell(
-                    onTap: () => onTakePicture(),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+        appBar: AppBar(
+          title: Text('Deep Mycosis'),
+        ),
+        body: Center(
+            child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ElevatedButton(
+                onPressed: () => context.go("/camera"), child: Text("Camera")),
+            ElevatedButton(
+                //เป็นปุ่มที่เมื่อกดแล้วจะทำการเลือกรูปภาพจาก gallery
+                onPressed: () => pickImage(ImageSource.gallery),
+                child: Text("Gallery")),
+            ElevatedButton(
+                onPressed: () => context.go("/history"),
+                child: Text("History")),
+          ],
+        )));
+  }
+
+  Future pickImage(ImageSource source) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile = await _picker.pickImage(
+      source: source,
     );
-  }
 
-  Future<void> initialzationCamera() async {
-    var cameras = await availableCameras();
-    controller = CameraController(
-        cameras[EnumCameraDescription.front.index], ResolutionPreset.medium,
-        imageFormatGroup: ImageFormatGroup.yuv420);
-    await controller.initialize();
-  }
+    // using your method of getting an image
+    //final File image = File(pickedFile!.path);
 
-  onTakePicture() async {
-    await controller.takePicture().then((XFile xfile) {
-      if (mounted) {
-        // ignore: unnecessary_null_comparison
-        if (xfile != null) {
-          var crop_image = new SizedBox(
-            child: AspectRatio(
-              aspectRatio: 487 / 300,
-              child: Container(height: 200,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    
-                      fit: BoxFit.fitWidth,
-                      // fitWidth ให้รูปเป็นแนวนอน
-                      alignment: FractionalOffset.center,
-                      image: (Image.file(File(xfile.path)).image)),
-                ),
-              ),
-            ),
-          );
-          showDialog(
-              context: context,
-              builder: (context) =>
-                  AlertDialog(title: Text('test'), content: crop_image));
-        }
-      }
+    // //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
+    // if (await File('/Pictures/sample.jpg').exists()) {
+    //   await File('/Pictures/sample.jpg').delete();
+    //   await image.copy('/Pictures/sample.jpg');
+    // } else {
+    //   // copy the file to a new path
+    //   await image.copy('/Pictures/sample.jpg');
+    // }
+
+    context.goNamed(modeling.routeName, queryParams: {
+      'image': pickedFile!.path,
+      'cam':"n"
     });
+
+    /*
+    setState(() {
+      isLoading = true;
+      imageSelect = false;
+    });
+
+    File image = File(pickedFile!.path);
+    await imageClassification(image);
+
+    resultShow(pickedFile!.path);*/
   }
 }
-
-enum EnumCameraDescription { front, back }
