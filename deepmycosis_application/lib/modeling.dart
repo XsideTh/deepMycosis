@@ -8,8 +8,8 @@ import 'package:pytorch_lite/pytorch_lite.dart';
 
 
 class modeling extends StatelessWidget {
-  final String image;
-  const modeling({super.key, required this.image});
+  final String image, cam;
+  const modeling({super.key, required this.image, required this.cam});
   static const routeName = 'modeling';
 
   @override
@@ -32,6 +32,7 @@ class modeling extends StatelessWidget {
       'image': image,
       'result': probResult[0],
       'prob': probResult[1],
+      'cam':cam
     });
   }
 

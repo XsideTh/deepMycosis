@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:io' as io;
 
 import 'package:path_provider/path_provider.dart';
@@ -23,55 +24,69 @@ class _historyState extends State<history> {
 
   // Make New Function
   void _listofFiles() async {
+    
     /*final directory = await getApplicationDocumentsDirectory(). +
         "/sdcard/Pictures";*/
 
-    /*final Dirtest = Directory("sdcard/Pictures").listSync();
+      /*final Dirtest = Directory("sdcard/Pictures").listSync();
       Dirtest.forEach((element) {print(element);});*/
-
-    final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
-    nonDir.forEach((img) {
-      String time = img
-          .toString()
-          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(11, 30);
-      String prob = img
-          .toString()
-          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(31, 37);
-      print("nonpythium time : " + time + " with prob : " + prob);
-      ListPythium list = new ListPythium();
-      list.type = "NonPythium";
-      list.time = time;
-      list.path = img.path;
-      list.prob = prob;
-      images.add(list);
-    });
-
-    final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
-    pythiumDir.forEach((img) {
-      String time = img
-          .toString()
-          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(8, 27);
-      String prob = img
-          .toString()
-          .substring(img.toString().lastIndexOf('/') + 1, img.toString().length)
-          .substring(28, 34);
-      print("pyhium time : " + time + " with prob : " + prob);
-      ListPythium list = new ListPythium();
-      list.type = "Pythium";
-      list.time = time;
-      list.path = img.path;
-      list.prob = prob;
-      images.add(list);
-    });
-    //print(images.length);
-    images.sort((a, b) => b.time.compareTo(a.time));
-    images.forEach((element) {
-      print(element.time);
-    });
+    
+      final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
+      nonDir.forEach((img) {
+        String time = img
+            .toString()
+            .substring(
+                img.toString().lastIndexOf('/') + 1, img.toString().length)
+            .substring(11, 30);
+        String prob = img
+            .toString()
+            .substring(
+                img.toString().lastIndexOf('/') + 1, img.toString().length)
+            .substring(31, 37);
+        print("nonpythium time : " + time + " with prob : " + prob);
+        ListPythium list = new ListPythium();
+        list.type = "NonPythium";
+        list.time = time;
+        list.path = img.path;
+        list.prob = prob;
+        images.add(list);
+      });
+    
+      final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
+      pythiumDir.forEach((img) {
+        String time = img
+            .toString()
+            .substring(
+                img.toString().lastIndexOf('/') + 1, img.toString().length)
+            .substring(8, 27);
+        String prob = img
+            .toString()
+            .substring(
+                img.toString().lastIndexOf('/') + 1, img.toString().length)
+            .substring(28, 34);
+        print("pyhium time : " + time + " with prob : " + prob);
+        ListPythium list = new ListPythium();
+        list.type = "Pythium";
+        list.time = time;
+        list.path = img.path;
+        list.prob = prob;
+        images.add(list);
+      });
+      //print(images.length);
+      images.sort((a, b) => b.time.compareTo(a.time));
+      images.forEach((element) {
+        print(element.time);
+      });
   }
+
+  static const List<(Color?, Color? background, ShapeBorder?)> customizations =
+      <(Color?, Color?, ShapeBorder?)>[
+    (null, null, null), // The FAB uses its default for null parameters.
+    (null, Colors.green, null),
+    (Colors.white, Colors.green, null),
+    (Colors.white, Colors.green, CircleBorder()),
+  ];
+  int FAindex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +95,7 @@ class _historyState extends State<history> {
       title: 'List of Files',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Deep Mycosis: History"),
+          title: Text("Deep Mycosis"),
         ),
         body: Container(
           child: Column(
@@ -119,7 +134,16 @@ class _historyState extends State<history> {
               )
             ],
           ),
-        ),
+        ),floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.go("/");
+            },
+            foregroundColor: customizations[FAindex].$1,
+            backgroundColor: customizations[FAindex].$2,
+            shape: customizations[FAindex].$3,
+            child: const Icon(Icons.arrow_back),
+          ),
       ),
     );
   }

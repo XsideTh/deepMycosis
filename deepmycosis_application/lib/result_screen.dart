@@ -1,20 +1,32 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:deepmycosis_application/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as path;
 
 class ResultScreen extends StatelessWidget {
-  String? result, image, prob;
+  String? result, image, prob, cam;
 
   ResultScreen({
     super.key,
     required this.result,
     required this.image,
     required this.prob,
+    required this.cam
   });
   static const routeName = 'result-screen';
+
+  static const List<(Color?, Color? background, ShapeBorder?)> customizations =
+      <(Color?, Color?, ShapeBorder?)>[
+    (null, null, null), // The FAB uses its default for null parameters.
+    (null, Colors.green, null),
+    (Colors.white, Colors.green, null),
+    (Colors.white, Colors.green, CircleBorder()),
+  ];
+  int index = 0;
 
   @override
   //State<ResultScreen> createState() => _ResultScreenState(result!, image!);
@@ -60,38 +72,56 @@ class ResultScreen extends StatelessWidget {
 
     GallerySaver.saveImage(newPath, albumName: result!);
 
+    @override
+    void dispose() {
+      //super.dispose();
+      //Tflite.close();
+    }
+
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Result'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.file(File(newPath)),
-            Center(
-              child: Visibility(
-                visible: result != null,
-                child: Text(
-                  "$result",
-                  maxLines: 3,
-                  style: TextStyle(fontSize: 40.0),
+          appBar: AppBar(
+            title: const Text('Result'),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.file(File(newPath)),
+              Center(
+                child: Visibility(
+                  visible: result != null,
+                  child: Text(
+                    "$result",
+                    maxLines: 3,
+                    style: TextStyle(fontSize: 40.0),
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Visibility(
-                visible: result != null,
-                child: Text(
-                  "(with $prob% probability)",
-                  maxLines: 3,
-                  style: TextStyle(fontSize: 20.0),
+              Center(
+                child: Visibility(
+                  visible: result != null,
+                  child: Text(
+                    "(with $prob% probability)",
+                    maxLines: 3,
+                    style: TextStyle(fontSize: 20.0),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              if(cam!.contains("y")){
+                context.go("/camera");
+              }
+              else context.go("/");
+            },
+            foregroundColor: customizations[index].$1,
+            backgroundColor: customizations[index].$2,
+            shape: customizations[index].$3,
+            child: const Icon(Icons.arrow_back),
+          )),
     );
   }
 }

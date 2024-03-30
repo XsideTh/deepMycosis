@@ -29,12 +29,15 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   void initState() {
     super.initState();
   }
-/*
-  @override
-  void dispose() {
-    super.dispose();
-    //Tflite.close();
-  }*/
+
+static const List<(Color?, Color? background, ShapeBorder?)> customizations =
+      <(Color?, Color?, ShapeBorder?)>[
+    (null, null, null), // The FAB uses its default for null parameters.
+    (null, Colors.green, null),
+    (Colors.white, Colors.green, null),
+    (Colors.white, Colors.green, CircleBorder()),
+  ];
+  int FAindex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +78,16 @@ class _Camera_ScreenState extends State<Camera_Screen> {
                 child: CircularProgressIndicator(),
               );
             }
-          }),
+          }),floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.go("/");
+            },
+            foregroundColor: customizations[FAindex].$1,
+            backgroundColor: customizations[FAindex].$2,
+            shape: customizations[FAindex].$3,
+            child: const Icon(Icons.arrow_back),
+          ),
     );
   }
 
@@ -160,6 +172,7 @@ class _Camera_ScreenState extends State<Camera_Screen> {
   void gotoModel(String image) {
     context.goNamed(modeling.routeName, queryParams: {
       'image': image,
+      'cam':"y"
     });
   }
 

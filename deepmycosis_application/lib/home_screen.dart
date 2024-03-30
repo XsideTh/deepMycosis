@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     context.goNamed(modeling.routeName, queryParams: {
       'image': pickedFile!.path,
+      'cam':"n"
     });
 
     /*

@@ -4,6 +4,7 @@ import 'package:deepmycosis_application/home_screen.dart';
 import 'package:deepmycosis_application/modeling.dart';
 import 'package:deepmycosis_application/result_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 Future main() async {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return MaterialApp.router(
       title: 'Deepmyosis Application',
       theme: ThemeData(
@@ -48,6 +50,7 @@ class MyApp extends StatelessWidget {
             result: State.queryParams['result']!,
             image: State.queryParams['image']!,
             prob: State.queryParams['prob']!,
+            cam: State.queryParams['cam']!,
           ),
         ),
         GoRoute(
@@ -55,6 +58,7 @@ class MyApp extends StatelessWidget {
           name: modeling.routeName,
           builder: (context, State) => modeling(
             image: State.queryParams['image']!,
+            cam: State.queryParams['cam']!
           ),
         ),
         GoRoute(
