@@ -1,4 +1,4 @@
-name: deepmycosis_application
+name: DeepMycosis
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -38,6 +38,25 @@ dependencies:
   pytorch_lite: ^4.2.2 #ใช้ในการ run model แต่ต้องเป็น model ที่เป็น torch script
   gallery_saver: ^2.3.2 #ใช้ในการบันทึกรูปภาพลงใน album ที่ต้องการ
   flutter_native_splash: ^2.0.1+1 #ใช้ในการแสดงหน้า splash screen
+  flutter_launcher_icons: "^0.13.1" #แสดง icon ตามรูปที่ต้องการ
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/Icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/Icon.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/images/Icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/Icon.png"
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:deepmycosis_application/history_screen.dart';
-import 'package:deepmycosis_application/modeling.dart';
-import 'package:deepmycosis_application/result_screen.dart';
+import 'package:DeepMycosis/about_screen.dart';
+import 'package:DeepMycosis/history_screen.dart';
+import 'package:DeepMycosis/modeling.dart';
+import 'package:DeepMycosis/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,12 +27,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
   }
-/*
+
   @override
   void dispose() {
-    //super.dispose();
+    super.dispose();
     //Tflite.close();
-  }*/
+  }
+
+  static const List<(Color?, Color? background, ShapeBorder?)> customizations =
+      <(Color?, Color?, ShapeBorder?)>[
+    (null, null, null), // The FAB uses its default for null parameters.
+    (null, Colors.green, null),
+    (Colors.white, Colors.green, null),
+    (Colors.white, Colors.green, CircleBorder()),
+  ];
+  int FAindex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +62,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
                 onPressed: () => context.go("/history"),
                 child: Text("History")),
+            ElevatedButton(
+                onPressed: () => context.go("/about"),
+                child: Text("About Pythium"))
           ],
-        )));
+        )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            exit(0);
+          },
+          foregroundColor: customizations[FAindex].$1,
+          backgroundColor: customizations[FAindex].$2,
+          shape: customizations[FAindex].$3,
+          child: const Icon(Icons.close),
+        ));
   }
 
   Future pickImage(ImageSource source) async {
@@ -74,10 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //   await image.copy('/Pictures/sample.jpg');
     // }
 
-    context.goNamed(modeling.routeName, queryParams: {
-      'image': pickedFile!.path,
-      'cam':"n"
-    });
+    context.goNamed(modeling.routeName,
+        queryParams: {'image': pickedFile!.path, 'cam': "n"});
 
     /*
     setState(() {

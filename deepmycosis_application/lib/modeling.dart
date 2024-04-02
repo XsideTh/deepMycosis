@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:deepmycosis_application/result_screen.dart';
+import 'package:DeepMycosis/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:deepmycosis_application/home_screen.dart';
+import 'package:DeepMycosis/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:go_router/go_router.dart';

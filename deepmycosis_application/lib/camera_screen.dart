@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:deepmycosis_application/result_screen.dart';
-import 'package:deepmycosis_application/modeling.dart';
+import 'package:DeepMycosis/result_screen.dart';
+import 'package:DeepMycosis/modeling.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';

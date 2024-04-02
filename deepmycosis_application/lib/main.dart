@@ -1,8 +1,9 @@
-import 'package:deepmycosis_application/camera_screen.dart';
-import 'package:deepmycosis_application/history_screen.dart';
-import 'package:deepmycosis_application/home_screen.dart';
-import 'package:deepmycosis_application/modeling.dart';
-import 'package:deepmycosis_application/result_screen.dart';
+import 'package:DeepMycosis/camera_screen.dart';
+import 'package:DeepMycosis/about_screen.dart';
+import 'package:DeepMycosis/history_screen.dart';
+import 'package:DeepMycosis/home_screen.dart';
+import 'package:DeepMycosis/modeling.dart';
+import 'package:DeepMycosis/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -65,6 +66,11 @@ class MyApp extends StatelessWidget {
           path: '/history',
           name: history.routeName,
           builder: (context, State) => history(),
+        ),
+        GoRoute(
+          path: '/about',
+          name: about.routeName,
+          builder: (context, State) => about(),
         ),
       ]),
     );
