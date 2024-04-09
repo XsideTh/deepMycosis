@@ -73,9 +73,6 @@ class modeling extends StatelessWidget {
 
     if (_results != null) {
       prob = _prob;
-      if (prob! < 0.318) {
-        prob = 1 - prob;
-      }
     }
 
     var probStr = (prob * 100).toStringAsFixed(2) as String;
