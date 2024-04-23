@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 
-
 class modeling extends StatelessWidget {
   final String image, cam;
   const modeling({super.key, required this.image, required this.cam});
@@ -28,11 +27,12 @@ class modeling extends StatelessWidget {
   Future<void> main(BuildContext context) async {
     var classificationModel = await loadModel();
     var probResult = await imageClassification(image, classificationModel!);
+    print(probResult[0]);
     context.goNamed(ResultScreen.routeName, queryParams: {
       'image': image,
       'result': probResult[0],
       'prob': probResult[1],
-      'cam':cam
+      'cam': cam
     });
   }
 
@@ -60,27 +60,23 @@ class modeling extends StatelessWidget {
 
   Future<List> imageClassification(
       String image, ClassificationModel classificationModel) async {
-    List<String> imagePrediction =
-        await classificationModel //ค่าที่รับมาเป็น list
-            .getImagePrediction(await File(image).readAsBytes());
-    print(
-        "prediction is : ${imagePrediction[0]}"); //ค่าตัวแรกของ list จะบอกว่าเป็น pythium หรือไม่
-    print(
-        "with prob is : ${imagePrediction[1]}"); //ค่าตัวที่สองของ list จะบอกว่ามีโอกาสเป็น Pythium เท่าไหร่
-    var _results = imagePrediction[0]; //เก็บค่าตัวแรกของ list
-    var _prob = double.parse(imagePrediction[1]); ////เก็บค่าตัวสองของ list
-    var prob;
+    var imagePrediction = await classificationModel
+        .getImagePredictionList(await File(image).readAsBytes());
+    print("prob 0 : ${imagePrediction[0]}");
 
-    if (_results != null) {
-      prob = _prob;
-    }
+    var cutoff = 0.318;
+    var _prob = imagePrediction[0]; ////เก็บค่าตัวสองของ list
 
-    var probStr = (prob * 100).toStringAsFixed(2) as String;
+    var probStr = (_prob * 100).toStringAsFixed(2) as String;
     while (probStr.length < 6) {
       probStr = "0" + probStr;
     }
-
     print(probStr);
-    return [_results, probStr];
+    var _results = "";
+    if (imagePrediction[0] > cutoff) {
+      return ["pythium", probStr];
+    } else {
+      return ["Non-pythium", probStr];
+    }
   }
 }
