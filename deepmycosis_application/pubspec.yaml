@@ -39,6 +39,7 @@ dependencies:
   gallery_saver: ^2.3.2 #ใช้ในการบันทึกรูปภาพลงใน album ที่ต้องการ
   flutter_native_splash: ^2.0.1+1 #ใช้ในการแสดงหน้า splash screen
   flutter_launcher_icons: "^0.13.1" #แสดง icon ตามรูปที่ต้องการ
+  image: ^4.0.15
 
 flutter_launcher_icons:
   android: "launcher_icon"

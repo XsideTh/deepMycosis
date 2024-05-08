@@ -53,15 +53,15 @@ static const List<(Color?, Color? background, ShapeBorder?)> customizations =
               return Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  AspectRatio(
+                  AspectRatio(//เปิดกล้องจากมือถือ
                       aspectRatio: 2 / 3, child: CameraPreview(controller)),
-                  AspectRatio(
+                  AspectRatio(//overlay ที่จะให้ผู้ใช้เล็ง
                       aspectRatio: 2 / 3,
                       child: Image.asset(
                         'assets/images/camera-overlay-conceptcoder.png',
                         fit: BoxFit.cover,
                       )),
-                  InkWell(
+                  InkWell(//ปุ่มกดถ่ายรูป
                     onTap: () => onTakePicture(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -104,7 +104,7 @@ static const List<(Color?, Color? background, ShapeBorder?)> customizations =
   }
 
   onTakePicture() async {
-    //controller ทำการถ่ายรูปเก็บไว้ในตัวแปล xfile แล้วทำงานภายในต่อ
+    //controller ทำการถ่ายรูปเก็บไว้ในตัวแปร xfile แล้วทำงานภายในต่อ
     await controller.takePicture().then((XFile xfile) async {
       if (mounted) {
         // ignore: unnecessary_null_comparison
@@ -113,30 +113,28 @@ static const List<(Color?, Color? background, ShapeBorder?)> customizations =
           var decodedImage =
               await decodeImageFromList(fullimage.readAsBytesSync());
 
-          int multiply =
-              ((320 - (decodedImage.height / 2).round()) / 2).round();
-          if (multiply <= 0) multiply = 1;
           int middleX = (decodedImage.width / 2).round();
           int middleY = (decodedImage.height / 2).round();
           print("middle X is" + middleX.toString());
           print("middle y is" + middleY.toString());
-          int size = 224;
+          int size = 224;//ขนาดของรูปที่เราต้องการในการ crop
 
           var crop_image;
+          //if ในการแยกเครื่องที่ใช้ในการทดสอบ โดยหาก middleY น้อยกว่าหรือเท่ากับ 340 เป็นเครื่อง Alpha 5G
           if (middleY <= 340) {
+            //Future.value คือการนำค่าจาก function มาใช้
             crop_image = await Future.value(
-                //Future.value คือการนำค่าจาก function มาใช้ฏ
-                //ตัดรูปภาพขนาด 224224 ที่ตำแหน่ง x:224 Y:154
+                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x+10 Y-30 การบวกลบค่า x y เป็นการ offset เพื่อที่จะได้ crop ภาพที่อยู่ภายในตัวเล็ง
                 FlutterNativeImage.cropImage(
                     xfile.path,
                     (middleX + 10) - ((size / 2).round()),
                     (middleY - 30) - ((size / 2).round()),
                     size,
                     size));
-          } else {
+          } else { //หากไม่น้อยกว่าหรือเท่ากับ 340 จะเป็นเครื่อง
             crop_image = await Future.value(
                 //Future.value คือการนำค่าจาก function มาใช้
-                //ตัดรูปภาพขนาด 224224 ที่ตำแหน่ง x:224 Y:154
+                //ตัดรูปภาพขนาด 224*224 ที่ตำแหน่ง x-30 Y-5 การบวกลบค่า x y เป็นการ offset พร้อมมีการสลับตำแหน่ง x และ y เพื่อที่จะได้ crop ภาพที่อยู่ภายในตัวเล็ง
                 FlutterNativeImage.cropImage(
                     xfile.path,
                     (middleY - 30) - ((size / 2).round()),
@@ -145,31 +143,14 @@ static const List<(Color?, Color? background, ShapeBorder?)> customizations =
                     size));
           }
 
-          // using your method of getting an image
-          final File image = File(crop_image.path);
-
-          //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
-          // if (await File('/sdcard/Pictures/sample.jpg').exists()) {
-          //   await File('/sdcard/Pictures/sample.jpg').delete();
-          //   await image.copy('/sdcard/Pictures/sample.jpg');
-          // } else {
-          //   // copy the file to a new path
-          //   await image.copy('/sdcard/Pictures/sample.jpg');
-          // }
-
           gotoModel(crop_image.path);
-
-/*
-          await imageClassification(File(crop_image
-              .path)); //นำรูปภาพที่ตัดไว้แล้วมาทำการตรวจสอบว่าเป็น pythium หรือไม่
-
-          resultShow(crop_image.path);*/
         }
       }
     });
   }
 
   void gotoModel(String image) {
+    //ส่งตำแหน่งภาพที่ถูกตัดมาแล้วไปยัง modeling.dart พร้อม cam = y คือมาจาก camera
     context.goNamed(modeling.routeName, queryParams: {
       'image': image,
       'cam':"y"

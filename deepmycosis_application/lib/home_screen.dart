@@ -85,30 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
       source: source,
     );
 
-    // using your method of getting an image
-    //final File image = File(pickedFile!.path);
-
-    // //ตรวจสอบว่ามีไฟล์อยู่หรือไม่
-    // if (await File('/Pictures/sample.jpg').exists()) {
-    //   await File('/Pictures/sample.jpg').delete();
-    //   await image.copy('/Pictures/sample.jpg');
-    // } else {
-    //   // copy the file to a new path
-    //   await image.copy('/Pictures/sample.jpg');
-    // }
-
+    //ส่ง path ของรูปที่เลือกไป modeling.dart พร้อม cam = n คือ ไม่ได้มาจาก camera
     context.goNamed(modeling.routeName,
         queryParams: {'image': pickedFile!.path, 'cam': "n"});
 
-    /*
-    setState(() {
-      isLoading = true;
-      imageSelect = false;
-    });
-
-    File image = File(pickedFile!.path);
-    await imageClassification(image);
-
-    resultShow(pickedFile!.path);*/
   }
 }

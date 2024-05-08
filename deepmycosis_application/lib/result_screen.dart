@@ -33,6 +33,7 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //บันทึกเวลาสำหรับการทำนาย เพื่อใช้แปลงเป็นชื่อไฟล์
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     DateTime tsdate = DateTime.fromMillisecondsSinceEpoch(timestamp);
     String day = tsdate.day.toString();
@@ -45,6 +46,7 @@ class ResultScreen extends StatelessWidget {
     if (hour.length <= 1) hour = "0" + hour;
     if (minute.length <= 1) minute = "0" + minute;
     if (second.length <= 1) second = "0" + second;
+    //เรียงตาม ปี เดือน วัน ชั่วโมง นาที วินาที
     String? datetime = tsdate.year.toString() +
         "-" +
         month +
@@ -56,8 +58,8 @@ class ResultScreen extends StatelessWidget {
         minute +
         "-" +
         second;
-    // File picture = File("/sdcard/Pictures/sample.jpg");
 
+    //ประกอบชื่อไฟล์โดยเป็น ผลลัพธ์ว่าเป็น pythium หรือไม่ ตามด้วยวันเวลา และตามด้วยค่า prob
     String name = "${result}_${datetime}_${prob!}.jpg";
     File picture = File(image!);
     if (!result!.contains("Non")) {
@@ -68,15 +70,10 @@ class ResultScreen extends StatelessWidget {
     String dir = path.dirname(picture.path);
     String newPath = path.join(dir, name);
     print('NewPath: ${newPath}');
+    //แก้ช่ื่อไฟล์ภาพ
     picture.renameSync(newPath);
 
     GallerySaver.saveImage(newPath, albumName: result!);
-
-    @override
-    void dispose() {
-      //super.dispose();
-      //Tflite.close();
-    }
 
     return MaterialApp(
       home: Scaffold(
@@ -86,8 +83,8 @@ class ResultScreen extends StatelessWidget {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.file(File(newPath)),
-              Center(
+              Image.file(File(newPath)),//แสดงภาพ
+              Center(//แสดงว่าเป็น pythium หรือไม่
                 child: Visibility(
                   visible: result != null,
                   child: Text(
@@ -97,7 +94,7 @@ class ResultScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
+              Center(//แสดงค่า prob
                 child: Visibility(
                   visible: result != null,
                   child: Text(
@@ -111,10 +108,10 @@ class ResultScreen extends StatelessWidget {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
+            onPressed: () {//หากมาจาก camera จะกลับไปหน้า camera
               if(cam!.contains("y")){
                 context.go("/camera");
-              }
+              }//หากไม่จะกลับไปหน้า homescreen
               else context.go("/");
             },
             foregroundColor: customizations[index].$1,
@@ -125,36 +122,3 @@ class ResultScreen extends StatelessWidget {
     );
   }
 }
-/*
-class _ResultScreenState extends State<ResultScreen> {
-  String result, image;
-
-  _ResultScreenState(String this.result, String this.image);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Result'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(image!),
-            Center(
-              child: Visibility(
-                visible: result != null,
-                child: Text(
-                  "${result}",
-                  maxLines: 3,
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/

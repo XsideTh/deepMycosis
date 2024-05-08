@@ -30,7 +30,7 @@ class _historyState extends State<history> {
     /*final Dirtest = Directory("sdcard/Pictures").listSync();
       Dirtest.forEach((element) {print(element);});*/
 
-    final nonDir = Directory("sdcard/Pictures/NonPythium").listSync();
+    final nonDir = Directory("sdcard/Pictures/Non-Pythium").listSync();
     nonDir.forEach((img) {
       String time = img
           .toString()
@@ -49,7 +49,7 @@ class _historyState extends State<history> {
       images.add(list);
     });
 
-    final pythiumDir = Directory("sdcard/Pictures/Pythium_").listSync();
+    final pythiumDir = Directory("sdcard/Pictures/Pythium").listSync();
     pythiumDir.forEach((img) {
       String time = img
           .toString()
